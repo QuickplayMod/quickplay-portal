@@ -1,9 +1,10 @@
+# syntax=docker/dockerfile:experimental
 FROM node:14 as build-stage
 WORKDIR /usr/src/app
 
 COPY ./package.json .
 COPY ./package-lock.json .
-RUN npm install
+RUN --mount=type=secret,id=npmrc,dst=/root/.npmrc npm install
 COPY . .
 RUN npm run build
 

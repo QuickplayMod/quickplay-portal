@@ -1,2 +1,10 @@
 node_modules
 dist
+.npmrc
+.env
+.git
+.gitignore
+.idea
+README.md
+LICENSE
+.vscode

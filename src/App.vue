@@ -11,7 +11,7 @@
           width="40"
         />
 
-        <h1>Quickplay</h1>
+        <h1 class="nav-title">Quickplay</h1>
       </div>
 
       <div class="nav-buttons">
@@ -22,20 +22,31 @@
     </VAppBar>
 
     <VMain class="main-body">
-      <QuickplayTitle />
+      <VContainer>
+        <VRow>
+          <VCol cols="12" md="6" sm="12">
+            <ConnectionsChart />
+          </VCol>
+          <VCol cols="12" md="6" sm="12" class="welcome-col">
+            <QuickplayWelcome />
+          </VCol>
+        </VRow>
+      </VContainer>
     </VMain>
   </VApp>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import QuickplayTitle from "@/components/QuickplayTitle.vue";
+import QuickplayWelcome from "@/components/QuickplayWelcome.vue";
+import ConnectionsChart from "@/components/ConnectionsChart.vue";
 
 export default Vue.extend({
   name: "App",
 
   components: {
-    QuickplayTitle
+    QuickplayWelcome,
+    ConnectionsChart
   },
 
   data: () => ({
@@ -55,5 +66,15 @@ export default Vue.extend({
 }
 .main-body {
   background-color: map-get($grey, darken-4);
+}
+.welcome-col {
+  @media (max-width: 960px) {
+    order: -1;
+  }
+}
+.nav-title {
+  @media (max-width: 500px) {
+    display: none;
+  }
 }
 </style>

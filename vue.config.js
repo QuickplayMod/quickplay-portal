@@ -1,4 +1,13 @@
 module.exports = {
   transpileDependencies: ["vuetify"],
-  publicPath: process.env.NODE_ENV === "production" ? "/quickplay/portal" : "/"
+  devServer:
+    process.env.NODE_ENV === "production"
+      ? undefined
+      : {
+          watchOptions: {
+            ignored: /node_modules/,
+            aggregateTimeout: 300,
+            poll: 1000
+          }
+        }
 };
