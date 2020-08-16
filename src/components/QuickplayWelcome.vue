@@ -1,6 +1,6 @@
 <template>
   <div class="title-wrapper">
-    <h1 class="qp-title">Hello, bugfroggy.</h1>
+    <h1 class="qp-title">Hello, {{ $store.state.mcName }}.</h1>
     <div class="quote">
       <p class="quote-header">Quote of the day:</p>
       <FontAwesomeIcon :icon="['fas', 'quote-left']" class="quote-icon" />

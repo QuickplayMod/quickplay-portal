@@ -18,19 +18,31 @@
         <VBtn text>
           Home
         </VBtn>
+        <VBtn
+          text
+          v-if="$store.state.loggedIn"
+          @click="$store.dispatch('logout')"
+        >
+          Log out
+        </VBtn>
+        <VBtn text v-else @click="init">
+          Log in
+        </VBtn>
       </div>
     </VAppBar>
 
     <VMain class="main-body">
       <VContainer>
-        <VRow>
-          <VCol cols="12" md="6" sm="12">
-            <ConnectionsChart />
-          </VCol>
-          <VCol cols="12" md="6" sm="12" class="welcome-col">
-            <QuickplayWelcome />
-          </VCol>
-        </VRow>
+        <Loading class="loader" v-if="$store.state.loading" />
+        <LoginFailed
+          class="login-failed"
+          v-else-if="$store.state.loginFailed"
+        />
+        <NoPermission
+          class="login-failed"
+          v-else-if="!$store.state.loggedIn || !$store.state.isAdmin"
+        />
+        <LoggedInBody v-else />
       </VContainer>
     </VMain>
   </VApp>
@@ -38,25 +50,42 @@
 
 <script lang="ts">
 import Vue from "vue";
-import QuickplayWelcome from "@/components/QuickplayWelcome.vue";
-import ConnectionsChart from "@/components/ConnectionsChart.vue";
+import Loading from "@/components/Loading.vue";
+import LoggedInBody from "@/components/LoggedInBody.vue";
+import LoginFailed from "@/components/LoginFailed.vue";
+import NoPermission from "@/components/NoPermission.vue";
 
 export default Vue.extend({
   name: "App",
-
   components: {
-    QuickplayWelcome,
-    ConnectionsChart
+    NoPermission,
+    LoginFailed,
+    LoggedInBody,
+    Loading
   },
-
-  data: () => ({
-    //
-  })
+  async mounted() {
+    // Initialize the application by connecting the socket.
+    this.init();
+  },
+  methods: {
+    async init() {
+      await this.$store.dispatch("initialize");
+    }
+  }
 });
 </script>
 
 <style lang="scss" scoped>
 @import "~vuetify/src/styles/styles.sass";
+.login-failed {
+  text-align: center;
+  margin-top: 15vh;
+}
+.loader {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-top: 15vh;
+}
 .nav-buttons {
   margin-left: 20px;
   height: 100%;
@@ -76,5 +105,9 @@ export default Vue.extend({
   @media (max-width: 500px) {
     display: none;
   }
+}
+.signin-button {
+  position: relative;
+  right: 0;
 }
 </style>

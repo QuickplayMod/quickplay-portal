@@ -6,13 +6,13 @@
         <p class="top">{{ max }}</p>
         <p class="bottom">{{ min }}</p>
       </div>
-      <trend
+      <VSparkline
         class="graph"
-        :data="[0, 1, 2, 3, 4, 2, 6, 12, 9]"
-        :gradient="['#0fa99a', '#2c4845']"
         auto-draw
+        :value="[0, 1, 2, 3, 4, 2, 6, 12, 9]"
+        :gradient="['#0fa99a', '#2c4845']"
         smooth
-      ></trend>
+      />
     </div>
     <div class="x-axis">
       <p class="left">{{ start }}</p>
@@ -46,6 +46,9 @@ export default {
 
 <style lang="scss" scoped>
 .conn-graph {
+  .graph {
+    width: 100%;
+  }
   .title {
     text-align: center;
   }
