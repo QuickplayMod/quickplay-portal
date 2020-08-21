@@ -138,6 +138,7 @@ const actions = {
         resolve()
       })
       ctx.state.socket.addEventListener("close", () => {
+        console.log("Socket closed")
         ctx.commit("SET_LOGGED_IN", false)
         ctx.commit("SET_LOGIN_FAILED", true)
       })
