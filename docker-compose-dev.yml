@@ -16,6 +16,7 @@ services:
     command: npm run serve
     env_file:
       - .env
+      - .env.development
   socket:
     depends_on:
       - db

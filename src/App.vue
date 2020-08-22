@@ -45,6 +45,9 @@
         <LoggedInBody v-else />
       </VContainer>
     </VMain>
+    <VSnackbar v-model="snackbar" bottom color="error">
+      {{ currentErrorMessage }}
+    </VSnackbar>
   </VApp>
 </template>
 
@@ -54,9 +57,16 @@ import Loading from "@/components/Loading.vue";
 import LoggedInBody from "@/components/LoggedInBody.vue";
 import LoginFailed from "@/components/LoginFailed.vue";
 import NoPermission from "@/components/NoPermission.vue";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "App",
+  data() {
+    return {
+      snackbar: false,
+      errorMessageTimer: -1
+    };
+  },
   components: {
     NoPermission,
     LoginFailed,
@@ -67,9 +77,37 @@ export default Vue.extend({
     // Initialize the application by connecting the socket.
     this.init();
   },
+  watch: {
+    errorMessages() {
+      if (this.errorMessageTimer == -1) {
+        this.showErrorMessage();
+      }
+    }
+  },
+  computed: {
+    currentErrorMessage(): string {
+      if (!this.errorMessages || !this.errorMessages.length) {
+        return "";
+      }
+      return this.errorMessages[0];
+    },
+    ...mapState(["errorMessages"])
+  },
   methods: {
     async init() {
       await this.$store.dispatch("initialize");
+    },
+    showErrorMessage() {
+      if (!this.currentErrorMessage) {
+        clearTimeout(this.errorMessageTimer);
+        this.errorMessageTimer = -1;
+        return;
+      }
+      this.snackbar = true;
+      this.errorMessageTimer = setTimeout(() => {
+        this.$store.commit("POP_ERROR_MESSAGE");
+        this.showErrorMessage();
+      }, 7000); // Default snackbar timeout is 6000
     }
   }
 });

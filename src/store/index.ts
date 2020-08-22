@@ -24,7 +24,8 @@ interface StateInterface {
   googleId?: string,
   googleJwt?: string
   mcName?: string,
-  mcUuid?: string
+  mcUuid?: string,
+  errorMessages: string[]
 }
 interface StoreContext {
   state: StateInterface,
@@ -36,12 +37,22 @@ const state: StateInterface = {
   loginFailed: false,
   loggedIn: false,
   isAdmin: false,
-  loading: true
+  loading: true,
+  errorMessages: []
 }
 const getters = {
-
 }
+
 const mutations = {
+  PUSH_ERROR_MESSAGE(state: StateInterface, msg: string) {
+    state.errorMessages.push(msg)
+  },
+  POP_ERROR_MESSAGE(state: StateInterface) {
+    if(!state.errorMessages || !state.errorMessages.length) {
+      return
+    }
+    state.errorMessages.splice(0, 1)
+  },
   SET_LOADING(state: StateInterface, loading: boolean) {
     state.loading = loading
   },
@@ -141,9 +152,10 @@ const actions = {
         console.log("Socket closed")
         ctx.commit("SET_LOGGED_IN", false)
         ctx.commit("SET_LOGIN_FAILED", true)
+        ctx.commit("PUSH_ERROR_MESSAGE", "Socket connection closed.")
       })
       ctx.state.socket.addEventListener("error", () => {
-        // TODO notify user of error
+        ctx.commit("PUSH_ERROR_MESSAGE", "ERROR: Something went wrong while connected to the backend!")
       })
     })
     ctx.state.actionBus?.subscribe(AuthCompleteAction, new AuthCompleteSubscriber())
