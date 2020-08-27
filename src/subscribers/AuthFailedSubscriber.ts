@@ -13,6 +13,7 @@ class AuthFailedSubscriber extends Subscriber {
             await store.dispatch("initialize")
         } else {
             console.log("Authentication failed");
+            store.commit("PUSH_ERROR_MESSAGE", "Auth failed: Please try refreshing!")
             store.commit("SET_LOADING", false)
             store.commit("SET_LOGGED_IN", false)
             store.commit("SET_LOGIN_FAILED", true)

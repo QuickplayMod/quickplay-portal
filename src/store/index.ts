@@ -3,14 +3,39 @@ import Vuex from "vuex";
 import {
   Action,
   ActionBus,
-  AuthBeginHandshakeAction, AuthCompleteAction, AuthFailedAction,
+  AuthBeginHandshakeAction,
+  AuthCompleteAction,
+  AuthFailedAction,
+  DisableModAction,
   InitializeClientAction,
-  Resolver
+  RemoveAliasedActionAction,
+  RemoveButtonAction,
+  RemoveScreenAction, RemoveTranslationAction,
+  Resolver,
+  SendChatComponentAction,
+  SetAliasedActionAction,
+  SetButtonAction,
+  SetCurrentUserCountAction,
+  SetScreenAction,
+  SetTranslationAction, SetUserCountHistoryAction, SystemOutAction, Screen, Button, AliasedAction
 } from "@quickplaymod/quickplay-actions-js";
 import {Buffer} from "buffer";
 import AuthCompleteSubscriber from "@/subscribers/AuthCompleteSubscriber";
 import AuthBeginSubscriber from "@/subscribers/AuthBeginSubscriber";
 import AuthFailedSubscriber from "@/subscribers/AuthFailedSubscriber";
+import SetScreenSubscriber from "@/subscribers/SetScreenSubscriber";
+import SetButtonSubscriber from "@/subscribers/SetButtonSubscriber";
+import SetAliasedActionSubscriber from "@/subscribers/SetAliasedActionSubscriber";
+import SetTranslationSubscriber from "@/subscribers/SetTranslationSubscriber";
+import DisableModSubscriber from "@/subscribers/DisableModSubscriber";
+import RemoveAliasedActionSubscriber from "@/subscribers/RemoveAliasedActionSubscriber";
+import RemoveButtonSubscriber from "@/subscribers/RemoveButtonSubscriber";
+import RemoveScreenSubscriber from "@/subscribers/RemoveScreenSubscriber";
+import SendChatComponentSubscriber from "@/subscribers/SendChatComponentSubscriber";
+import SetCurrentUserCountSubscriber from "@/subscribers/SetCurrentUserCountSubscriber";
+import SetUserCountHistorySubscriber from "@/subscribers/SetUserCountHistorySubscriber";
+import SystemOutSubscriber from "@/subscribers/SystemOutSubscriber";
+import RemoveTranslationSubscriber from "@/subscribers/RemoveTranslationSubscriber";
 
 Vue.use(Vuex);
 
@@ -25,7 +50,11 @@ interface StateInterface {
   googleJwt?: string
   mcName?: string,
   mcUuid?: string,
-  errorMessages: string[]
+  errorMessages: string[],
+  screens: Record<string, Screen>,
+  buttons: Record<string, Button>,
+  aliasedActions: Record<string, AliasedAction>,
+  translations: Record<string, Record<string, string>>
 }
 interface StoreContext {
   state: StateInterface,
@@ -38,12 +67,43 @@ const state: StateInterface = {
   loggedIn: false,
   isAdmin: false,
   loading: true,
-  errorMessages: []
+  errorMessages: [],
+  screens: {},
+  buttons: {},
+  aliasedActions: {},
+  translations: {}
 }
 const getters = {
 }
 
 const mutations = {
+  SET_SCREEN(state: StateInterface, arg: {key: string, value: Screen}) {
+    if(!state.screens) {
+      Vue.set(state, "screens", {})
+    }
+    Vue.set(state.screens, arg.key, arg.value)
+  },
+  SET_BUTTON(state: StateInterface, arg: {key: string, value: Button}) {
+    if(!state.buttons) {
+      Vue.set(state, "buttons", {})
+    }
+    Vue.set(state.buttons, arg.key, arg.value)
+  },
+  SET_ALIASED_ACTION(state: StateInterface, arg: {key: string, value: AliasedAction}) {
+    if(!state.aliasedActions) {
+      Vue.set(state, "aliasedActions", {})
+    }
+    Vue.set(state.aliasedActions, arg.key, arg.value)
+  },
+  SET_TRANSLATION(state: StateInterface, arg: {key: string, lang: string, value: string}) {
+    if(!state.translations) {
+      Vue.set(state, "translations", {})
+    }
+    if(!state.translations[arg.key]) {
+      Vue.set(state.translations, arg.key, {})
+    }
+    Vue.set(state.translations[arg.key], arg.lang, arg.value)
+  },
   PUSH_ERROR_MESSAGE(state: StateInterface, msg: string) {
     state.errorMessages.push(msg)
   },
@@ -161,6 +221,19 @@ const actions = {
     ctx.state.actionBus?.subscribe(AuthCompleteAction, new AuthCompleteSubscriber())
     ctx.state.actionBus?.subscribe(AuthBeginHandshakeAction, new AuthBeginSubscriber())
     ctx.state.actionBus?.subscribe(AuthFailedAction, new AuthFailedSubscriber())
+    ctx.state.actionBus?.subscribe(SetScreenAction, new SetScreenSubscriber())
+    ctx.state.actionBus?.subscribe(SetButtonAction, new SetButtonSubscriber())
+    ctx.state.actionBus?.subscribe(SetAliasedActionAction, new SetAliasedActionSubscriber())
+    ctx.state.actionBus?.subscribe(SetTranslationAction, new SetTranslationSubscriber())
+    ctx.state.actionBus?.subscribe(DisableModAction, new DisableModSubscriber())
+    ctx.state.actionBus?.subscribe(RemoveAliasedActionAction, new RemoveAliasedActionSubscriber())
+    ctx.state.actionBus?.subscribe(RemoveButtonAction, new RemoveButtonSubscriber())
+    ctx.state.actionBus?.subscribe(RemoveScreenAction, new RemoveScreenSubscriber())
+    ctx.state.actionBus?.subscribe(RemoveTranslationAction, new RemoveTranslationSubscriber())
+    ctx.state.actionBus?.subscribe(SendChatComponentAction, new SendChatComponentSubscriber())
+    ctx.state.actionBus?.subscribe(SetCurrentUserCountAction, new SetCurrentUserCountSubscriber())
+    ctx.state.actionBus?.subscribe(SetUserCountHistoryAction, new SetUserCountHistorySubscriber())
+    ctx.state.actionBus?.subscribe(SystemOutAction, new SystemOutSubscriber())
   },
   sendAction(ctx: StoreContext, payload: {action: Action}) {
     if(ctx.state.socket == null || ctx.state.socket.readyState != WebSocket.OPEN) {

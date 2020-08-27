@@ -6,14 +6,17 @@
     <VCol cols="12" md="6" sm="12" class="welcome-col">
       <QuickplayWelcome />
     </VCol>
+    <ControlTable />
   </VRow>
 </template>
 
 <script lang="ts">
 import ConnectionsChart from "./ConnectionsChart.vue";
 import QuickplayWelcome from "./QuickplayWelcome.vue";
+import ControlTable from "@/components/ControlTable.vue";
 export default {
   components: {
+    ControlTable,
     ConnectionsChart,
     QuickplayWelcome
   },
