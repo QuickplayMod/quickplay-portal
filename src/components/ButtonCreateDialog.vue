@@ -82,10 +82,15 @@
             change a Button's key unless you know what you are doing.
           </VAlert>
           <div class="action-btns">
-            <VBtn class="cancel-btn" color="error" @click="cancelClicked">
+            <VBtn class="cancel-btn" @click="cancelClicked">
               Cancel
             </VBtn>
-            <VBtn class="submit-btn" @click="submit" :disabled="!formValid">
+            <VBtn
+              class="submit-btn"
+              color="primary"
+              @click="submit"
+              :disabled="!formValid"
+            >
               Submit
             </VBtn>
           </div>
@@ -96,7 +101,11 @@
 </template>
 
 <script>
-import { Button, AlterButtonAction } from "@quickplaymod/quickplay-actions-js";
+import {
+  Button,
+  AlterButtonAction,
+  Screen
+} from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
 export default {
   name: "ButtonCreateDialog",
@@ -201,11 +210,19 @@ export default {
       this.formTranslationKey = this.initialTranslationKey;
     },
     async submit() {
-      const currentButton = await Button.deserialize(
-        JSON.stringify(this.$store.state.buttons[this.formButtonKey])
-      );
-      const button = currentButton
-        ? currentButton
+      const currentButton = this.$store.state.screens[this.formScreenKey];
+      let currentButtonCopy = null;
+      if (currentButton) {
+        const currentButtonJson = JSON.stringify(currentButton);
+        if (currentButtonJson) {
+          currentButtonCopy = await Screen.deserialize(
+            JSON.stringify(currentButton)
+          );
+        }
+      }
+
+      const button = currentButtonCopy
+        ? currentButtonCopy
         : new Button(this.formButtonKey);
       button.availableOn = this.formSelectedServers;
       button.imageURL = this.formImageUrl;

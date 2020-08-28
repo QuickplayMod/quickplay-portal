@@ -54,10 +54,15 @@
             not change a Translation's key unless you know what you are doing.
           </VAlert>
           <div class="action-btns">
-            <VBtn class="cancel-btn" color="error" @click="cancelClicked">
+            <VBtn class="cancel-btn" @click="cancelClicked">
               Cancel
             </VBtn>
-            <VBtn class="submit-btn" @click="submit" :disabled="!formValid">
+            <VBtn
+              class="submit-btn"
+              color="primary"
+              @click="submit"
+              :disabled="!formValid"
+            >
               Submit
             </VBtn>
           </div>

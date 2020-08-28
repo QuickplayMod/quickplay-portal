@@ -59,6 +59,7 @@ export default {
   extends: VInput,
   data() {
     return {
+      showTranslationList: false,
       showTranslationDialog: false,
       modified: false
     };

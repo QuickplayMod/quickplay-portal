@@ -95,10 +95,15 @@
             change a Screen's key unless you know what you are doing.
           </VAlert>
           <div class="action-btns">
-            <VBtn class="cancel-btn" color="error" @click="cancelClicked">
+            <VBtn class="cancel-btn" @click="cancelClicked">
               Cancel
             </VBtn>
-            <VBtn class="submit-btn" @click="submit" :disabled="!formValid">
+            <VBtn
+              class="submit-btn"
+              color="primary"
+              @click="submit"
+              :disabled="!formValid"
+            >
               Submit
             </VBtn>
           </div>
@@ -226,11 +231,19 @@ export default {
       this.formTranslationKey = this.initialTranslationKey;
     },
     async submit() {
-      const currentScreen = await Screen.deserialize(
-        JSON.stringify(this.$store.state.screens[this.formScreenKey])
-      );
-      const screen = currentScreen
-        ? currentScreen
+      const currentScreen = this.$store.state.screens[this.formScreenKey];
+      let currentScreenCopy = null;
+      if (currentScreen) {
+        const currentScreenJson = JSON.stringify(currentScreen);
+        if (currentScreenJson) {
+          currentScreenCopy = await Screen.deserialize(
+            JSON.stringify(currentScreen)
+          );
+        }
+      }
+
+      const screen = currentScreenCopy
+        ? currentScreenCopy
         : new Screen(this.formScreenKey, this.formScreenType);
       screen.availableOn = this.formSelectedServers;
       screen.imageURL = this.formImageUrl;
