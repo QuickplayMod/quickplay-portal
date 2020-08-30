@@ -4,7 +4,9 @@
       <slot :attrs="attrs" :on="on" name="activator"></slot>
     </template>
     <VCard>
-      <VCardTitle class="headline">New Button</VCardTitle>
+      <VCardTitle class="headline">
+        {{ initialButtonKey ? "Edit" : "New" }} Button
+      </VCardTitle>
       <VCardText>
         <VContainer>
           <VForm v-model="formValid">
@@ -101,11 +103,7 @@
 </template>
 
 <script>
-import {
-  Button,
-  AlterButtonAction,
-  Screen
-} from "@quickplaymod/quickplay-actions-js";
+import { Button, AlterButtonAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
 export default {
   name: "ButtonCreateDialog",
@@ -210,12 +208,12 @@ export default {
       this.formTranslationKey = this.initialTranslationKey;
     },
     async submit() {
-      const currentButton = this.$store.state.screens[this.formScreenKey];
+      const currentButton = this.$store.state.buttons[this.formButtonKey];
       let currentButtonCopy = null;
       if (currentButton) {
         const currentButtonJson = JSON.stringify(currentButton);
         if (currentButtonJson) {
-          currentButtonCopy = await Screen.deserialize(
+          currentButtonCopy = await Button.deserialize(
             JSON.stringify(currentButton)
           );
         }

@@ -4,7 +4,9 @@
       <slot :attrs="attrs" :on="on" name="activator"></slot>
     </template>
     <VCard>
-      <VCardTitle class="headline">New Aliased Action</VCardTitle>
+      <VCardTitle class="headline">
+        {{ initialAliasedActionKey ? "Edit" : "New" }} Aliased Action
+      </VCardTitle>
       <VCardText>
         <VContainer>
           <VForm v-model="formValid">

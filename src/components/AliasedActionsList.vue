@@ -10,7 +10,7 @@
           v-model="search"
           append-icon="$search"
         ></VTextField>
-        <VList two-line>
+        <VList three-line>
           <VListItem
             v-for="(value, key) in aliasedActions"
             :key="key"
@@ -21,7 +21,10 @@
                 {{ key }}
               </VListItemTitle>
               <VListItemSubtitle>
-                {{ { action: value.action } }}
+                {{ getActionName(value.action) }}
+              </VListItemSubtitle>
+              <VListItemSubtitle>
+                {{ getActionArgs(value.action) }}
               </VListItemSubtitle>
             </VListItemContent>
           </VListItem>
@@ -68,6 +71,19 @@ export default {
   methods: {
     itemClicked(button) {
       this.$emit("click", button);
+    },
+    getActionName(action) {
+      return action.constructor.name;
+    },
+    getActionArgs(action) {
+      let str = "";
+      for (let i = 0; i < action.payloadObjs.length; i++) {
+        str += action.getPayloadObjectAsString(i);
+        if (i < action.payloadObjs.length - 1) {
+          str += ", ";
+        }
+      }
+      return str;
     }
   }
 };

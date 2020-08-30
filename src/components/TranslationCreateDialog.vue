@@ -1,7 +1,9 @@
 <template>
   <VDialog persistent max-width="600px" v-model="localValue">
     <VCard>
-      <VCardTitle class="headline">New Translation</VCardTitle>
+      <VCardTitle class="headline">
+        {{ initialTranslationKey ? "Edit" : "New" }} Translation
+      </VCardTitle>
       <VCardText>
         <VContainer>
           <VForm v-model="formValid">

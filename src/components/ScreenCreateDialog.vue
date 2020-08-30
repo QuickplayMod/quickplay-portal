@@ -1,7 +1,9 @@
 <template>
   <VDialog persistent max-width="600px" v-model="localValue">
     <VCard>
-      <VCardTitle class="headline">New Screen</VCardTitle>
+      <VCardTitle class="headline">
+        {{ initialScreenKey ? "Edit" : "New" }} Screen
+      </VCardTitle>
       <VCardText>
         <VContainer>
           <VForm v-model="formValid">
@@ -116,7 +118,6 @@
 <script>
 import { Screen, AlterScreenAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
-import { translate } from "@/util";
 export default {
   name: "ScreenCreateDialog",
   components: { TranslationSelector },
@@ -253,9 +254,6 @@ export default {
         action: action
       });
       this.localValue = false;
-    },
-    translate(key) {
-      return translate(key);
     }
   }
 };
