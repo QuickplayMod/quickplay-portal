@@ -12,7 +12,7 @@
         ></VTextField>
         <VList two-line>
           <VListItem
-            v-for="(value, key) in $store.state.buttons"
+            v-for="(value, key) in buttons"
             :key="key"
             @click="itemClicked(value)"
           >
@@ -46,6 +46,16 @@ export default {
     };
   },
   computed: {
+    buttons() {
+      const result = {};
+      const all = this.$store.state.buttons;
+      for (const button in all) {
+        if (button.toLowerCase().includes(this.search.toLowerCase())) {
+          result[button] = all[button];
+        }
+      }
+      return result;
+    },
     localValue: {
       get() {
         return this.value;

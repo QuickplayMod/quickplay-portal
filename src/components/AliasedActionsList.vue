@@ -12,7 +12,7 @@
         ></VTextField>
         <VList two-line>
           <VListItem
-            v-for="(value, key) in $store.state.aliasedActions"
+            v-for="(value, key) in aliasedActions"
             :key="key"
             @click="itemClicked(value)"
           >
@@ -46,6 +46,16 @@ export default {
     };
   },
   computed: {
+    aliasedActions() {
+      const result = {};
+      const all = this.$store.state.aliasedActions;
+      for (const aliasedAction in all) {
+        if (aliasedAction.toLowerCase().includes(this.search.toLowerCase())) {
+          result[aliasedAction] = all[aliasedAction];
+        }
+      }
+      return result;
+    },
     localValue: {
       get() {
         return this.value;

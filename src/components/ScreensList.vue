@@ -12,7 +12,7 @@
         ></VTextField>
         <VList two-line>
           <VListItem
-            v-for="(value, key) in $store.state.screens"
+            v-for="(value, key) in screens"
             :key="key"
             @click="itemClicked(key)"
           >
@@ -46,6 +46,16 @@ export default {
     };
   },
   computed: {
+    screens() {
+      const result = {};
+      const all = this.$store.state.screens;
+      for (const screen in all) {
+        if (screen.toLowerCase().includes(this.search.toLowerCase())) {
+          result[screen] = all[screen];
+        }
+      }
+      return result;
+    },
     localValue: {
       get() {
         return this.value;
