@@ -22,9 +22,11 @@
       <AliasedActionCreateDialog
         v-if="showEditMenu"
         v-model="showEditMenu"
-        :initial-button-key="editorInitialKeyValue"
+        :initial-aliased-action-key="editorInitialKeyValue"
         :initial-selected-servers="editorInitialSelectedServersValue"
         :initial-admin-only="editorInitialAdminOnlyValue"
+        :initial-action-type="editorInitialActionType"
+        :initial-action-arg="editorInitialActionArg"
       />
     </template>
   </QuickplayItemTable>
@@ -59,6 +61,8 @@ export default {
       editorInitialKeyValue: "",
       editorInitialSelectedServersValue: [],
       editorInitialAdminOnlyValue: false,
+      editorInitialActionType: "OpenScreenAction",
+      editorInitialActionArg: "",
       headers: [
         {
           text: "Aliased Action Key",
@@ -85,6 +89,8 @@ export default {
           "Hypixel Alpha Network"
         ];
         this.editorInitialAdminOnlyValue = false;
+        this.editorInitialActionType = "OpenScreenAction";
+        this.editorInitialActionArg = "";
         this.showEditMenu = true;
       }
     },
@@ -108,6 +114,8 @@ export default {
       this.editorInitialKeyValue = item.key || "";
       this.editorInitialSelectedServersValue = item.availableOn || [];
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
+      this.editorInitialActionType = item.action.constructor.name;
+      this.editorInitialActionArg = item.action.getPayloadObjectAsString(0);
       this.showEditMenu = true;
     },
     deleteItem(item) {
