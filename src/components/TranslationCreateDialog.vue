@@ -126,6 +126,9 @@ export default {
       if (key.length > 256) {
         return "This field must be less than or equal to 256 characters in length.";
       }
+      if (key.includes(",")) {
+        return "Translation keys cannot contain commas.";
+      }
       if (
         this.formTranslationLang &&
         this.$store.state.translations[key][this.formTranslationLang] &&
@@ -141,6 +144,9 @@ export default {
       }
       if (lang.length > 16) {
         return "This field must be less than or equal to 16 characters in length.";
+      }
+      if (lang.includes(",")) {
+        return "Translation languages cannot contain commas.";
       }
       return true;
     },
