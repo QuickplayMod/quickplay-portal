@@ -74,7 +74,7 @@ export default {
       this.$emit("click", button);
     },
     getActionName(action) {
-      return action.constructor.name;
+      return action.id === 11 ? "OpenScreenAction" : "SendChatCommandAction";
     },
     getActionArgs(action) {
       let str = "";

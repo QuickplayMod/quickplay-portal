@@ -114,7 +114,8 @@ export default {
       this.editorInitialKeyValue = item.key || "";
       this.editorInitialSelectedServersValue = item.availableOn || [];
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
-      this.editorInitialActionType = item.action.constructor.name;
+      this.editorInitialActionType =
+        item.action.id === 11 ? "OpenScreenAction" : "SendChatCommandAction";
       this.editorInitialActionArg = item.action.getPayloadObjectAsString(0);
       this.showEditMenu = true;
     },
