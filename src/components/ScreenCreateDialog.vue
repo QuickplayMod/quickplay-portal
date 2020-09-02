@@ -198,7 +198,7 @@ export default {
       for (let i = 0; i < arr.length; i++) {
         keyArray.push(arr[i].key);
       }
-      this.initialButtonList = keyArray;
+      this.formButtonList = keyArray;
     },
     getButtonsList() {
       const buttonArr = [];
