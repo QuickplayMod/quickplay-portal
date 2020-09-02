@@ -1,5 +1,5 @@
 <template>
-  <VDialog persistent max-width="600px" v-model="localValue">
+  <VDialog persistent max-width="800px" v-model="localValue">
     <template v-slot:activator="{ on, attrs }">
       <slot :attrs="attrs" :on="on" name="activator"></slot>
     </template>
@@ -71,11 +71,21 @@
                 />
               </VCol>
             </VRow>
+            <VRow>
+              <VCol>
+                <p class="subtitle-1">
+                  Aliased Actions
+                </p>
+                <VCard elevation="8">
+                  <AliasedActionsTable
+                    @change="arr => actionOrderChanged(arr)"
+                    :value="getActionList()"
+                    subtable
+                  />
+                </VCard>
+              </VCol>
+            </VRow>
           </VForm>
-          <p>
-            Button aliased actions can be added after the button has been
-            created.
-          </p>
           <VAlert
             type="warning"
             v-if="initialButtonKey && formButtonKey !== initialButtonKey"
@@ -105,9 +115,10 @@
 <script>
 import { Button, AlterButtonAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
+import AliasedActionsTable from "@/components/AliasedActionsTable";
 export default {
   name: "ButtonCreateDialog",
-  components: { TranslationSelector },
+  components: { AliasedActionsTable, TranslationSelector },
   props: {
     value: {
       type: Boolean,
@@ -132,6 +143,10 @@ export default {
     initialTranslationKey: {
       type: String,
       default: ""
+    },
+    initialAliasedActionList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -141,7 +156,8 @@ export default {
       formSelectedServers: this.initialSelectedServers,
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
-      formTranslationKey: this.initialTranslationKey
+      formTranslationKey: this.initialTranslationKey,
+      formAliasedActionList: this.initialAliasedActionList
     };
   },
   computed: {
@@ -158,6 +174,26 @@ export default {
     }
   },
   methods: {
+    actionOrderChanged(arr) {
+      const keyArray = []; // Arr is an array of buttons but needs to be an array of keys.
+      for (let i = 0; i < arr.length; i++) {
+        keyArray.push(arr[i].key);
+      }
+      this.formAliasedActionList = keyArray;
+    },
+    getActionList() {
+      const aaArr = [];
+      for (let i = 0; i < this.formAliasedActionList.length; i++) {
+        const aa = this.$store.state.aliasedActions[
+          this.formAliasedActionList[i]
+        ];
+        if (!aa) {
+          continue;
+        }
+        aaArr.push(aa);
+      }
+      return aaArr;
+    },
     validateButtonKey(key) {
       if (!key) {
         return "This field is required.";
@@ -206,6 +242,7 @@ export default {
       this.formAdminOnly = this.initialAdminOnly;
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
+      this.formAliasedActionList = this.initialAliasedActionList;
     },
     async submit() {
       const currentButton = this.$store.state.buttons[this.formButtonKey];
@@ -225,6 +262,7 @@ export default {
       button.availableOn = this.formSelectedServers;
       button.imageURL = this.formImageUrl;
       button.translationKey = this.formTranslationKey;
+      button.actions = this.formAliasedActionList;
       const action = new AlterButtonAction(this.formButtonKey, button);
       await this.$store.dispatch("sendAction", {
         action: action

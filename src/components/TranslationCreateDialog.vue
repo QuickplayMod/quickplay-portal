@@ -1,5 +1,5 @@
 <template>
-  <VDialog persistent max-width="600px" v-model="localValue">
+  <VDialog persistent max-width="800px" v-model="localValue">
     <VCard>
       <VCardTitle class="headline">
         {{ initialTranslationKey ? "Edit" : "New" }} Translation

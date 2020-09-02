@@ -10,12 +10,12 @@ import { LoaderPlugin } from "vue-google-login";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faQuoteLeft, faPencil, faTrash, faChevronDown, faArrowAltDown, faArrowAltUp, faCaretDown,
-  faChevronUp, faCheckCircle, faCheckSquare, faPlus, faSearch, faChevronLeft, faChevronRight
+  faChevronUp, faCheckCircle, faCheckSquare, faPlus, faSearch, faChevronLeft, faChevronRight, faLink
 } from "@fortawesome/pro-solid-svg-icons";
 import {faCircle, faSquare} from "@fortawesome/pro-light-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(faQuoteLeft, faPencil, faTrash, faChevronDown, faChevronUp, faChevronRight, faChevronLeft, faCircle,
-    faCheckCircle, faSquare, faCheckSquare, faPlus, faSearch, faArrowAltDown, faArrowAltUp, faCaretDown)
+    faCheckCircle, faSquare, faCheckSquare, faPlus, faSearch, faArrowAltDown, faArrowAltUp, faCaretDown, faLink)
 
 Vue.use(VueCookie)
 Vue.use(LoaderPlugin, {

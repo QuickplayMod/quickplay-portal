@@ -1,5 +1,5 @@
 <template>
-  <VDialog persistent max-width="600px" v-model="localValue">
+  <VDialog persistent max-width="800px" v-model="localValue">
     <VCard>
       <VCardTitle class="headline">
         {{ initialScreenKey ? "Edit" : "New" }} Screen
@@ -84,11 +84,21 @@
                 <TranslationSelector v-model="formTranslationKey" clearable />
               </VCol>
             </VRow>
+            <VRow>
+              <VCol>
+                <p class="subtitle-1">
+                  Buttons
+                </p>
+                <VCard elevation="8">
+                  <ButtonsTable
+                    @change="arr => buttonOrderChanged(arr)"
+                    :value="getButtonsList()"
+                    subtable
+                  />
+                </VCard>
+              </VCol>
+            </VRow>
           </VForm>
-          <p>
-            Buttons and back button actions can be added after the screen has
-            been created.
-          </p>
           <VAlert
             type="warning"
             v-if="initialScreenKey && formScreenKey !== initialScreenKey"
@@ -118,9 +128,10 @@
 <script>
 import { Screen, AlterScreenAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
+import ButtonsTable from "@/components/ButtonsTable";
 export default {
   name: "ScreenCreateDialog",
-  components: { TranslationSelector },
+  components: { ButtonsTable, TranslationSelector },
   props: {
     value: {
       type: Boolean,
@@ -149,6 +160,10 @@ export default {
     initialTranslationKey: {
       type: String,
       default: ""
+    },
+    initialButtonList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -160,7 +175,8 @@ export default {
       formSelectedServers: this.initialSelectedServers,
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
-      formTranslationKey: this.initialTranslationKey
+      formTranslationKey: this.initialTranslationKey,
+      formButtonList: this.initialButtonList
     };
   },
   computed: {
@@ -177,6 +193,24 @@ export default {
     }
   },
   methods: {
+    buttonOrderChanged(arr) {
+      const keyArray = []; // Arr is an array of buttons but needs to be an array of keys.
+      for (let i = 0; i < arr.length; i++) {
+        keyArray.push(arr[i].key);
+      }
+      this.initialButtonList = keyArray;
+    },
+    getButtonsList() {
+      const buttonArr = [];
+      for (let i = 0; i < this.formButtonList.length; i++) {
+        const btn = this.$store.state.buttons[this.formButtonList[i]];
+        if (!btn) {
+          continue;
+        }
+        buttonArr.push(btn);
+      }
+      return buttonArr;
+    },
     translationChosen(key) {
       this.formTranslationKey = key;
       this.showTranslationList = false;
@@ -230,6 +264,7 @@ export default {
       this.formAdminOnly = this.initialAdminOnly;
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
+      this.formButtonList = this.initialButtonList;
     },
     async submit() {
       const currentScreen = this.$store.state.screens[this.formScreenKey];
@@ -249,6 +284,7 @@ export default {
       screen.availableOn = this.formSelectedServers;
       screen.imageURL = this.formImageUrl;
       screen.translationKey = this.formTranslationKey;
+      screen.buttons = this.formButtonList;
       const action = new AlterScreenAction(this.formScreenKey, screen);
       await this.$store.dispatch("sendAction", {
         action: action

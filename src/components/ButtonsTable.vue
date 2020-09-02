@@ -10,9 +10,39 @@
   >
     <template v-slot:editor="{}">
       <div class="new-button-wrapper">
-        <VBtn fab color="primary" dark @click="newItemButtonClicked">
-          <FontAwesomeIcon :icon="['fas', 'plus']" class="plus-icon" />
-        </VBtn>
+        <VTooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn
+              v-if="subtable"
+              class="attach-btn"
+              fab
+              color="secondary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              @click="attachItemButtonClicked"
+            >
+              <FontAwesomeIcon :icon="['fas', 'link']" class="plus-icon" />
+            </VBtn>
+          </template>
+          <span>Attach</span>
+        </VTooltip>
+
+        <VTooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn
+              fab
+              color="primary"
+              dark
+              @click="newItemButtonClicked"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <FontAwesomeIcon :icon="['fas', 'plus']" class="plus-icon" />
+            </VBtn>
+          </template>
+          <span>Create New</span>
+        </VTooltip>
       </div>
       <ButtonsList
         v-if="subtable"
@@ -27,6 +57,7 @@
         :initial-admin-only="editorInitialAdminOnlyValue"
         :initial-image-url="editorInitialImageUrlValue"
         :initial-translation-key="editorInitialTranslationKeyValue"
+        :initial-aliased-action-list="editorInitialAliasedActionList"
       />
     </template>
     <template v-slot:expandable="{ item }">
@@ -76,6 +107,7 @@ export default {
       editorInitialAdminOnlyValue: false,
       editorInitialImageUrlValue: "",
       editorInitialTranslationKeyValue: "",
+      editorInitialAliasedActionList: [],
       headers: [
         {
           text: "Button Key",
@@ -122,20 +154,20 @@ export default {
       this.$emit("change", [...this.value, btn]);
       this.showButtonList = false;
     },
+    attachItemButtonClicked() {
+      this.showButtonList = true;
+    },
     newItemButtonClicked() {
-      if (this.subtable) {
-        this.showButtonList = true;
-      } else {
-        this.editorInitialKeyValue = "";
-        this.editorInitialSelectedServersValue = [
-          "Hypixel Network",
-          "Hypixel Alpha Network"
-        ];
-        this.editorInitialAdminOnlyValue = false;
-        this.editorInitialImageUrlValue = "";
-        this.editorInitialTranslationKeyValue = "";
-        this.showEditMenu = true;
-      }
+      this.editorInitialKeyValue = "";
+      this.editorInitialSelectedServersValue = [
+        "Hypixel Network",
+        "Hypixel Alpha Network"
+      ];
+      this.editorInitialAdminOnlyValue = false;
+      this.editorInitialImageUrlValue = "";
+      this.editorInitialTranslationKeyValue = "";
+      this.editorInitialAliasedActionList = [];
+      this.showEditMenu = true;
     },
     moveUpItem(item) {
       const index = this.value.indexOf(item);
@@ -159,6 +191,7 @@ export default {
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
       this.editorInitialImageUrlValue = item.imageURL || "";
       this.editorInitialTranslationKeyValue = item.translationKey || "";
+      this.editorInitialAliasedActionList = item.actions || [];
       this.showEditMenu = true;
     },
     deleteItem(item) {
@@ -186,6 +219,10 @@ export default {
 <style scoped lang="scss">
 .plus-icon {
   font-size: 20px;
+}
+
+.attach-btn {
+  margin-right: 10px;
 }
 
 .new-button-wrapper {

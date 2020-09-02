@@ -10,9 +10,39 @@
   >
     <template v-slot:editor="{}">
       <div class="new-button-wrapper">
-        <VBtn fab color="primary" dark @click="newItemButtonClicked">
-          <FontAwesomeIcon :icon="['fas', 'plus']" class="plus-icon" />
-        </VBtn>
+        <VTooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn
+              v-if="subtable"
+              class="attach-btn"
+              fab
+              color="secondary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              @click="attachItemButtonClicked"
+            >
+              <FontAwesomeIcon :icon="['fas', 'link']" class="plus-icon" />
+            </VBtn>
+          </template>
+          <span>Attach</span>
+        </VTooltip>
+
+        <VTooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn
+              fab
+              color="primary"
+              dark
+              @click="newItemButtonClicked"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <FontAwesomeIcon :icon="['fas', 'plus']" class="plus-icon" />
+            </VBtn>
+          </template>
+          <span>Create New</span>
+        </VTooltip>
       </div>
       <AliasedActionsList
         v-if="subtable"
@@ -79,20 +109,19 @@ export default {
       this.$emit("change", [...this.value, btn]);
       this.showAliasedActionList = false;
     },
+    attachItemButtonClicked() {
+      this.showAliasedActionList = true;
+    },
     newItemButtonClicked() {
-      if (this.subtable) {
-        this.showAliasedActionList = true;
-      } else {
-        this.editorInitialKeyValue = "";
-        this.editorInitialSelectedServersValue = [
-          "Hypixel Network",
-          "Hypixel Alpha Network"
-        ];
-        this.editorInitialAdminOnlyValue = false;
-        this.editorInitialActionType = "SendChatCommandAction";
-        this.editorInitialActionArg = "";
-        this.showEditMenu = true;
-      }
+      this.editorInitialKeyValue = "";
+      this.editorInitialSelectedServersValue = [
+        "Hypixel Network",
+        "Hypixel Alpha Network"
+      ];
+      this.editorInitialAdminOnlyValue = false;
+      this.editorInitialActionType = "SendChatCommandAction";
+      this.editorInitialActionArg = "";
+      this.showEditMenu = true;
     },
     moveUpItem(item) {
       const index = this.value.indexOf(item);
@@ -144,6 +173,10 @@ export default {
 <style scoped lang="scss">
 .plus-icon {
   font-size: 20px;
+}
+
+.attach-btn {
+  margin-right: 10px;
 }
 
 .new-button-wrapper {
