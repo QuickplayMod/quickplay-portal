@@ -61,7 +61,7 @@ export default {
       editorInitialKeyValue: "",
       editorInitialSelectedServersValue: [],
       editorInitialAdminOnlyValue: false,
-      editorInitialActionType: "OpenScreenAction",
+      editorInitialActionType: "SendChatCommandAction",
       editorInitialActionArg: "",
       headers: [
         {
@@ -89,7 +89,7 @@ export default {
           "Hypixel Alpha Network"
         ];
         this.editorInitialAdminOnlyValue = false;
-        this.editorInitialActionType = "OpenScreenAction";
+        this.editorInitialActionType = "SendChatCommandAction";
         this.editorInitialActionArg = "";
         this.showEditMenu = true;
       }

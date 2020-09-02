@@ -124,7 +124,7 @@ export default {
     },
     initialActionType: {
       type: String,
-      default: "OpenScreenAction"
+      default: "SendChatCommandAction"
     },
     initialActionArg: {
       type: String,
@@ -137,8 +137,8 @@ export default {
       formAliasedActionKey: this.initialAliasedActionKey,
       formSelectedServers: this.initialSelectedServers,
       formAdminOnly: this.initialAdminOnly,
-      formActionType: "OpenScreenAction",
-      formActionArg: "",
+      formActionType: this.initialActionType,
+      formActionArg: this.initialActionArg,
       actionsAvailable: ["OpenScreenAction", "SendChatCommandAction"],
       blockedCommands: [
         "me",
