@@ -9,6 +9,7 @@
           label="Search"
           v-model="search"
           append-icon="$search"
+          autofocus
         ></VTextField>
         <VList two-line>
           <VListItem
