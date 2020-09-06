@@ -92,7 +92,7 @@ export default {
       editorInitialSelectedServersValue: [],
       editorInitialAdminOnlyValue: false,
       editorInitialActionType: "SendChatCommandAction",
-      editorInitialActionArg: "",
+      editorInitialActionArg: "/play ",
       headers: [
         {
           text: "Aliased Action Key",
@@ -120,7 +120,7 @@ export default {
       ];
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialActionType = "SendChatCommandAction";
-      this.editorInitialActionArg = "";
+      this.editorInitialActionArg = "/play ";
       this.showEditMenu = true;
     },
     moveUpItem(item) {

@@ -1,5 +1,5 @@
 <template>
-  <VDialog persistent max-width="800px" v-model="localValue">
+  <VDialog max-width="800px" v-model="localValue">
     <VCard>
       <VCardTitle class="headline">
         {{ initialScreenKey ? "Edit" : "New" }} Screen

@@ -1,5 +1,5 @@
 <template>
-  <VDialog persistent max-width="800px" v-model="localValue">
+  <VDialog max-width="800px" v-model="localValue">
     <template v-slot:activator="{ on, attrs }">
       <slot :attrs="attrs" :on="on" name="activator"></slot>
     </template>

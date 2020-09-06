@@ -1,5 +1,5 @@
 <template>
-  <VDialog persistent max-width="800px" v-model="localValue">
+  <VDialog max-width="800px" v-model="localValue">
     <template v-slot:activator="{ on, attrs }">
       <slot :attrs="attrs" :on="on" name="activator"></slot>
     </template>
@@ -62,6 +62,7 @@
                   v-model="formActionType"
                   :items="actionsAvailable"
                   :rules="[validateActionType]"
+                  @change="actionTypeUpdated"
                 >
                   <template v-slot:label>
                     Action Type <span class="red--text">*</span>
@@ -142,7 +143,7 @@ export default {
     },
     initialActionArg: {
       type: String,
-      default: ""
+      default: "/play "
     }
   },
   data() {
@@ -210,6 +211,16 @@ export default {
     }
   },
   methods: {
+    actionTypeUpdated() {
+      if (
+        !this.formActionArg &&
+        this.formActionType === "SendChatCommandAction"
+      ) {
+        this.formActionArg = "/play ";
+      } else {
+        this.formActionArg = "";
+      }
+    },
     validateAliasedActionKey(key) {
       if (!key) {
         return "This field is required.";
