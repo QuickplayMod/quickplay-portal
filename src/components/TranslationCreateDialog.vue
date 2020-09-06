@@ -10,34 +10,43 @@
             <VRow>
               <VCol>
                 <VTextField
-                  label="Translation key"
                   v-model="formTranslationKey"
                   :counter="256"
                   :rules="[validateTranslationKey]"
                   @input="keyInput"
                   hint="Required. Must be unique per language."
-                ></VTextField>
+                >
+                  <template v-slot:label>
+                    Translation Key <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
               <VCol>
                 <VTextField
-                  label="Language"
                   v-model="formTranslationLang"
                   :counter="16"
                   @input="languageInput"
                   :rules="[validateTranslationLang]"
                   hint="Required. Must be unique per language."
-                ></VTextField>
+                >
+                  <template v-slot:label>
+                    Language <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
             </VRow>
             <VRow>
               <VCol>
                 <VTextField
-                  label="Value"
                   v-model="formTranslationValue"
                   :counter="512"
                   :rules="[validateTranslationValue]"
                   hint="Required."
-                ></VTextField>
+                >
+                  <template v-slot:label>
+                    Value <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
             </VRow>
           </VForm>

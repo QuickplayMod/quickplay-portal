@@ -53,6 +53,7 @@
         :initial-image-url="editorInitialImageUrlValue"
         :initial-translation-key="editorInitialTranslationKeyValue"
         :initial-button-list="editorInitialButtonList"
+        :initial-aliased-action-list="editorInitialAliasedActionList"
       />
     </template>
     <template v-slot:expandable="{ item }">
@@ -127,6 +128,7 @@ export default {
       editorInitialImageUrlValue: "",
       editorInitialTranslationKeyValue: "",
       editorInitialButtonList: [],
+      editorInitialAliasedActionList: [],
       screenTab: null,
       search: "",
       headers: [
@@ -218,6 +220,7 @@ export default {
       this.editorInitialImageUrlValue = "";
       this.editorInitialTranslationKeyValue = "";
       this.editorInitialButtonList = [];
+      this.editorInitialAliasedActionList = [];
       this.showEditMenu = true;
     },
     editItem(item) {
@@ -228,6 +231,7 @@ export default {
       this.editorInitialImageUrlValue = item.imageURL || "";
       this.editorInitialTranslationKeyValue = item.translationKey || "";
       this.editorInitialButtonList = item.buttons || [];
+      this.editorInitialAliasedActionList = item.backButtonActions || [];
       this.showEditMenu = true;
     },
     deleteItem(item) {

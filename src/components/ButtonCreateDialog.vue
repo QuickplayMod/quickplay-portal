@@ -13,17 +13,22 @@
             <VRow>
               <VCol>
                 <VTextField
-                  label="Button Key"
                   v-model="formButtonKey"
                   :counter="64"
                   :rules="[validateButtonKey]"
                   hint="Required. Must be unique."
-                ></VTextField>
+                >
+                  <template v-slot:label>
+                    Button Key <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
             </VRow>
             <VRow>
               <VCol>
-                <p class="subtitle-1">Available on</p>
+                <p class="subtitle-1">
+                  Available on <span class="red--text">*</span>
+                </p>
                 <VCheckbox
                   class="available-on-checkbox"
                   v-model="formSelectedServers"

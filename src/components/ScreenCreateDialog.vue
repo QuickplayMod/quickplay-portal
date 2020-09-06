@@ -10,15 +10,20 @@
             <VRow>
               <VCol>
                 <VTextField
-                  label="Screen Key"
                   v-model="formScreenKey"
                   :counter="64"
                   :rules="[validateScreenKey]"
                   hint="Required. Must be unique."
-                ></VTextField>
+                >
+                  <template v-slot:label>
+                    Screen Key <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
               <VCol>
-                <p class="subtitle-1">Screen Type</p>
+                <p class="subtitle-1">
+                  Screen Type <span class="red--text">*</span>
+                </p>
                 <VRadioGroup
                   row
                   v-model="formScreenType"
@@ -41,7 +46,9 @@
             </VRow>
             <VRow>
               <VCol>
-                <p class="subtitle-1">Available on</p>
+                <p class="subtitle-1">
+                  Available on <span class="red--text">*</span>
+                </p>
                 <VCheckbox
                   class="available-on-checkbox"
                   v-model="formSelectedServers"
@@ -86,15 +93,29 @@
             </VRow>
             <VRow>
               <VCol>
-                <p class="subtitle-1">
-                  Buttons
-                </p>
                 <VCard elevation="8">
-                  <ButtonsTable
-                    @change="arr => buttonOrderChanged(arr)"
-                    :value="getButtonsList()"
-                    subtable
-                  />
+                  <VTabs v-model="tab">
+                    <VTab key="screen-create-dialog-buttons">Buttons</VTab>
+                    <VTab key="screen-create-dialog-aliased-actions">
+                      Back Btn Actions
+                    </VTab>
+                  </VTabs>
+                  <VTabsItems v-model="tab">
+                    <VTabItem key="screen-create-dialog-buttons">
+                      <ButtonsTable
+                        @change="arr => buttonOrderChanged(arr)"
+                        :value="getButtonsList()"
+                        subtable
+                      />
+                    </VTabItem>
+                    <VTabItem key="screen-create-dialog-aliased-actions">
+                      <AliasedActionsTable
+                        @change="arr => aliasedActionOrderChanged(arr)"
+                        :value="getAliasedActionsList()"
+                        subtable
+                      />
+                    </VTabItem>
+                  </VTabsItems>
                 </VCard>
               </VCol>
             </VRow>
@@ -129,9 +150,10 @@
 import { Screen, AlterScreenAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
 import ButtonsTable from "@/components/ButtonsTable";
+import AliasedActionsTable from "@/components/AliasedActionsTable";
 export default {
   name: "ScreenCreateDialog",
-  components: { ButtonsTable, TranslationSelector },
+  components: { AliasedActionsTable, ButtonsTable, TranslationSelector },
   props: {
     value: {
       type: Boolean,
@@ -164,6 +186,10 @@ export default {
     initialButtonList: {
       type: Array,
       default: () => []
+    },
+    initialAliasedActionList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -176,7 +202,9 @@ export default {
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
-      formButtonList: this.initialButtonList
+      formButtonList: this.initialButtonList,
+      formAliasedActionList: this.initialAliasedActionList,
+      tab: ""
     };
   },
   computed: {
@@ -200,6 +228,13 @@ export default {
       }
       this.formButtonList = keyArray;
     },
+    aliasedActionOrderChanged(arr) {
+      const keyArray = []; // Arr is an array of aliased actions but needs to be an array of keys.
+      for (let i = 0; i < arr.length; i++) {
+        keyArray.push(arr[i].key);
+      }
+      this.formAliasedActionList = keyArray;
+    },
     getButtonsList() {
       const buttonArr = [];
       for (let i = 0; i < this.formButtonList.length; i++) {
@@ -210,6 +245,19 @@ export default {
         buttonArr.push(btn);
       }
       return buttonArr;
+    },
+    getAliasedActionsList() {
+      const aaArr = [];
+      for (let i = 0; i < this.formAliasedActionList.length; i++) {
+        const aa = this.$store.state.aliasedActions[
+          this.formAliasedActionList[i]
+        ];
+        if (!aa) {
+          continue;
+        }
+        aaArr.push(aa);
+      }
+      return aaArr;
     },
     translationChosen(key) {
       this.formTranslationKey = key;
@@ -265,6 +313,7 @@ export default {
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
       this.formButtonList = this.initialButtonList;
+      this.formAliasedActionList = this.initialAliasedActionList;
     },
     async submit() {
       const currentScreen = this.$store.state.screens[this.formScreenKey];

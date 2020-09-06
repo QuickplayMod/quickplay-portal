@@ -13,17 +13,22 @@
             <VRow>
               <VCol>
                 <VTextField
-                  label="Aliased Action Key"
                   v-model="formAliasedActionKey"
                   :counter="64"
                   :rules="[validateAliasedActionKey]"
                   hint="Required. Must be unique."
-                ></VTextField>
+                >
+                  <template v-slot:label>
+                    Aliased Action Key <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
             </VRow>
             <VRow>
               <VCol>
-                <p class="subtitle-1">Available on</p>
+                <p class="subtitle-1">
+                  Available on <span class="red--text">*</span>
+                </p>
                 <VCheckbox
                   class="available-on-checkbox"
                   v-model="formSelectedServers"
@@ -56,24 +61,33 @@
                 <VSelect
                   v-model="formActionType"
                   :items="actionsAvailable"
-                  label="Action Type"
                   :rules="[validateActionType]"
-                />
+                >
+                  <template v-slot:label>
+                    Action Type <span class="red--text">*</span>
+                  </template>
+                </VSelect>
               </VCol>
               <VCol>
                 <VSelect
                   v-if="formActionType === 'OpenScreenAction'"
                   v-model="formActionArg"
                   :items="screensAvailable"
-                  label="Screen"
                   :rules="[validateActionArg]"
-                />
+                >
+                  <template v-slot:label>
+                    Screen <span class="red--text">*</span>
+                  </template>
+                </VSelect>
                 <VTextField
                   v-else
                   v-model="formActionArg"
-                  label="Command"
                   :rules="[validateActionArg]"
-                />
+                >
+                  <template v-slot:label>
+                    Command <span class="red--text">*</span>
+                  </template>
+                </VTextField>
               </VCol>
             </VRow>
           </VForm>
