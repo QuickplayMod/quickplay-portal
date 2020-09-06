@@ -334,6 +334,7 @@ export default {
       screen.imageURL = this.formImageUrl;
       screen.translationKey = this.formTranslationKey;
       screen.buttons = this.formButtonList;
+      screen.backButtonActions = this.formAliasedActionList;
       const action = new AlterScreenAction(this.formScreenKey, screen);
       await this.$store.dispatch("sendAction", {
         action: action
