@@ -53,6 +53,7 @@
               </VCol>
               <VCol>
                 <p class="subtitle-1">Visibility</p>
+                <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
               </VCol>
             </VRow>
@@ -133,6 +134,10 @@ export default {
       type: Array,
       default: () => ["Hypixel Network", "Hypixel Alpha Network"]
     },
+    initialVisible: {
+      type: Boolean,
+      default: true
+    },
     initialAdminOnly: {
       type: Boolean,
       default: false
@@ -151,6 +156,7 @@ export default {
       formValid: false,
       formAliasedActionKey: this.initialAliasedActionKey,
       formSelectedServers: this.initialSelectedServers,
+      formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formActionType: this.initialActionType,
       formActionArg: this.initialActionArg,
@@ -280,6 +286,7 @@ export default {
     reset() {
       this.formAliasedActionKey = this.initialAliasedActionKey;
       this.formSelectedServers = this.initialSelectedServers;
+      this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
       this.formActionType = this.initialActionType;
       this.formActionArg = this.initialActionArg;
@@ -292,6 +299,8 @@ export default {
           ? OpenScreenAction
           : SendChatCommandAction;
       aliasedAction.action = new actionClass(this.formActionArg);
+      aliasedAction.visible = this.formVisible;
+      aliasedAction.adminOnly = this.formAdminOnly;
       const action = new AlterAliasedActionAction(
         this.formAliasedActionKey,
         aliasedAction

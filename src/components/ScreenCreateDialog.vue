@@ -73,6 +73,7 @@
               </VCol>
               <VCol>
                 <p class="subtitle-1">Visibility</p>
+                <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
               </VCol>
             </VRow>
@@ -171,6 +172,10 @@ export default {
       type: Array,
       default: () => ["Hypixel Network", "Hypixel Alpha Network"]
     },
+    initialVisible: {
+      type: Boolean,
+      default: true
+    },
     initialAdminOnly: {
       type: Boolean,
       default: false
@@ -199,6 +204,7 @@ export default {
       formScreenKey: this.initialScreenKey,
       formScreenType: this.initialScreenType,
       formSelectedServers: this.initialSelectedServers,
+      formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
@@ -309,6 +315,7 @@ export default {
       this.formScreenKey = this.initialScreenKey;
       this.formScreenType = this.initialScreenType;
       this.formSelectedServers = this.initialSelectedServers;
+      this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
@@ -335,6 +342,8 @@ export default {
       screen.translationKey = this.formTranslationKey;
       screen.buttons = this.formButtonList;
       screen.backButtonActions = this.formAliasedActionList;
+      screen.visible = this.formVisible;
+      screen.adminOnly = this.formAdminOnly;
       const action = new AlterScreenAction(this.formScreenKey, screen);
       await this.$store.dispatch("sendAction", {
         action: action

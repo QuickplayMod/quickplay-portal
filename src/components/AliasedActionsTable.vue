@@ -54,6 +54,7 @@
         v-model="showEditMenu"
         :initial-aliased-action-key="editorInitialKeyValue"
         :initial-selected-servers="editorInitialSelectedServersValue"
+        :initial-visible="editorInitialVisibleValue"
         :initial-admin-only="editorInitialAdminOnlyValue"
         :initial-action-type="editorInitialActionType"
         :initial-action-arg="editorInitialActionArg"
@@ -90,6 +91,7 @@ export default {
       showAliasedActionList: false,
       editorInitialKeyValue: "",
       editorInitialSelectedServersValue: [],
+      editorInitialVisibleValue: true,
       editorInitialAdminOnlyValue: false,
       editorInitialActionType: "SendChatCommandAction",
       editorInitialActionArg: "/play ",
@@ -118,6 +120,7 @@ export default {
         "Hypixel Network",
         "Hypixel Alpha Network"
       ];
+      this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialActionType = "SendChatCommandAction";
       this.editorInitialActionArg = "/play ";
@@ -142,6 +145,7 @@ export default {
     editItem(item) {
       this.editorInitialKeyValue = item.key || "";
       this.editorInitialSelectedServersValue = item.availableOn || [];
+      this.editorInitialVisibleValue = !!item.visible;
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
       this.editorInitialActionType =
         item.action.id === 11 ? "OpenScreenAction" : "SendChatCommandAction";

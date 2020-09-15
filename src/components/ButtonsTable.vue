@@ -54,6 +54,7 @@
         v-model="showEditMenu"
         :initial-button-key="editorInitialKeyValue"
         :initial-selected-servers="editorInitialSelectedServersValue"
+        :initial-visible="editorInitialVisibleValue"
         :initial-admin-only="editorInitialAdminOnlyValue"
         :initial-image-url="editorInitialImageUrlValue"
         :initial-translation-key="editorInitialTranslationKeyValue"
@@ -104,6 +105,7 @@ export default {
       showButtonList: false,
       editorInitialKeyValue: "",
       editorInitialSelectedServersValue: [],
+      editorInitialVisibleValue: true,
       editorInitialAdminOnlyValue: false,
       editorInitialImageUrlValue: "",
       editorInitialTranslationKeyValue: "",
@@ -163,6 +165,7 @@ export default {
         "Hypixel Network",
         "Hypixel Alpha Network"
       ];
+      this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialImageUrlValue = "";
       this.editorInitialTranslationKeyValue = "";
@@ -188,6 +191,7 @@ export default {
     editItem(item) {
       this.editorInitialKeyValue = item.key || "";
       this.editorInitialSelectedServersValue = item.availableOn || [];
+      this.editorInitialVisibleValue = !!item.visible;
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
       this.editorInitialImageUrlValue = item.imageURL || "";
       this.editorInitialTranslationKeyValue = item.translationKey || "";

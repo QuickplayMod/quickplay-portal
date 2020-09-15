@@ -11,6 +11,13 @@ class SetScreenSubscriber extends Subscriber {
         screen.backButtonActions = JSON.parse(action.getPayloadObjectAsString(4))
         screen.translationKey = action.getPayloadObjectAsString(5)
         screen.imageURL = action.getPayloadObjectAsString(6)
+        screen.visible = action.getPayloadObject(7).readUInt8(0) != 0
+        screen.adminOnly = action.getPayloadObject(8).readUInt8(0) != 0
+        screen.hypixelLocrawRegex = JSON.parse(action.getPayloadObjectAsString(9))
+        screen.hypixelRankRegex = action.getPayloadObjectAsString(10)
+        screen.hypixelPackageRankRegex = action.getPayloadObjectAsString(11)
+        screen.hypixelBuildTeamOnly = action.getPayloadObject(12).readUInt8(0) != 0
+        screen.hypixelBuildTeamAdminOnly = action.getPayloadObject(13).readUInt8(0) != 0
         store.commit("SET_SCREEN", {key: screen.key, value: screen})
     }
 }

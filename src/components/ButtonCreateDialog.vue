@@ -53,6 +53,7 @@
               </VCol>
               <VCol>
                 <p class="subtitle-1">Visibility</p>
+                <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
               </VCol>
             </VRow>
@@ -137,6 +138,10 @@ export default {
       type: Array,
       default: () => ["Hypixel Network", "Hypixel Alpha Network"]
     },
+    initialVisible: {
+      type: Boolean,
+      default: true
+    },
     initialAdminOnly: {
       type: Boolean,
       default: false
@@ -159,6 +164,7 @@ export default {
       formValid: false,
       formButtonKey: this.initialButtonKey,
       formSelectedServers: this.initialSelectedServers,
+      formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
@@ -244,6 +250,7 @@ export default {
     reset() {
       this.formButtonKey = this.initialButtonKey;
       this.formSelectedServers = this.initialSelectedServers;
+      this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
@@ -268,6 +275,8 @@ export default {
       button.imageURL = this.formImageUrl;
       button.translationKey = this.formTranslationKey;
       button.actions = this.formAliasedActionList;
+      button.visible = this.formVisible;
+      button.adminOnly = this.formAdminOnly;
       const action = new AlterButtonAction(this.formButtonKey, button);
       await this.$store.dispatch("sendAction", {
         action: action

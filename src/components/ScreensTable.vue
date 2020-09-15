@@ -49,6 +49,7 @@
         :initial-screen-key="editorInitialKeyValue"
         :initial-screen-type="editorInitialScreenTypeValue"
         :initial-selected-servers="editorInitialSelectedServersValue"
+        :initial-visible="editorInitialVisibleValue"
         :initial-admin-only="editorInitialAdminOnlyValue"
         :initial-image-url="editorInitialImageUrlValue"
         :initial-translation-key="editorInitialTranslationKeyValue"
@@ -124,6 +125,7 @@ export default {
       editorInitialKeyValue: "",
       editorInitialScreenTypeValue: "",
       editorInitialSelectedServersValue: [],
+      editorInitialVisibleValue: true,
       editorInitialAdminOnlyValue: false,
       editorInitialImageUrlValue: "",
       editorInitialTranslationKeyValue: "",
@@ -216,6 +218,7 @@ export default {
         "Hypixel Network",
         "Hypixel Alpha Network"
       ];
+      this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialImageUrlValue = "";
       this.editorInitialTranslationKeyValue = "";
@@ -227,6 +230,7 @@ export default {
       this.editorInitialKeyValue = item.key || "";
       this.editorInitialScreenTypeValue = item.screenType || "BUTTONS";
       this.editorInitialSelectedServersValue = item.availableOn || [];
+      this.editorInitialVisibleValue = !!item.visible;
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
       this.editorInitialImageUrlValue = item.imageURL || "";
       this.editorInitialTranslationKeyValue = item.translationKey || "";
