@@ -19,6 +19,13 @@
           Home
         </VBtn>
         <VBtn
+          v-if="$store.state.loggedIn"
+          text
+          @click="showEditLog = !showEditLog"
+        >
+          Edit Log
+        </VBtn>
+        <VBtn
           text
           v-if="$store.state.loggedIn"
           @click="$store.dispatch('logout')"
@@ -43,6 +50,10 @@
           v-else-if="!$store.state.loggedIn || !$store.state.isAdmin"
         />
         <LoggedInBody v-else />
+        <EditLog
+          v-model="showEditLog"
+          :edit-log="$store.state.editHistory.events"
+        />
       </VContainer>
     </VMain>
     <VSnackbar v-model="snackbar" bottom color="error">
@@ -58,16 +69,19 @@ import LoggedInBody from "@/components/LoggedInBody.vue";
 import LoginFailed from "@/components/LoginFailed.vue";
 import NoPermission from "@/components/NoPermission.vue";
 import { mapState } from "vuex";
+import EditLog from "@/components/EditLog.vue";
 
 export default Vue.extend({
   name: "App",
   data() {
     return {
       snackbar: false,
-      errorMessageTimer: -1
+      errorMessageTimer: -1,
+      showEditLog: false
     };
   },
   components: {
+    EditLog,
     NoPermission,
     LoginFailed,
     LoggedInBody,

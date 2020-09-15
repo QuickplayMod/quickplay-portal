@@ -10,14 +10,21 @@ import {
   InitializeClientAction,
   RemoveAliasedActionAction,
   RemoveButtonAction,
-  RemoveScreenAction, RemoveTranslationAction,
+  RemoveScreenAction,
+  RemoveTranslationAction,
   Resolver,
   SendChatComponentAction,
   SetAliasedActionAction,
   SetButtonAction,
   SetCurrentUserCountAction,
   SetScreenAction,
-  SetTranslationAction, SetUserCountHistoryAction, SystemOutAction, Screen, Button, AliasedAction
+  SetTranslationAction,
+  SetUserCountHistoryAction,
+  SystemOutAction,
+  Screen,
+  Button,
+  AliasedAction,
+  PushEditHistoryEventAction
 } from "@quickplaymod/quickplay-actions-js";
 import {Buffer} from "buffer";
 import AuthCompleteSubscriber from "@/subscribers/AuthCompleteSubscriber";
@@ -36,6 +43,7 @@ import SetCurrentUserCountSubscriber from "@/subscribers/SetCurrentUserCountSubs
 import SetUserCountHistorySubscriber from "@/subscribers/SetUserCountHistorySubscriber";
 import SystemOutSubscriber from "@/subscribers/SystemOutSubscriber";
 import RemoveTranslationSubscriber from "@/subscribers/RemoveTranslationSubscriber";
+import PushEditHistoryEventSubscriber from "@/subscribers/PushEditHistoryEventSubscriber";
 
 Vue.use(Vuex);
 
@@ -54,7 +62,8 @@ interface StateInterface {
   screens: Record<string, Screen>,
   buttons: Record<string, Button>,
   aliasedActions: Record<string, AliasedAction>,
-  translations: Record<string, Record<string, string>>
+  translations: Record<string, Record<string, string>>,
+  editHistory: { events: Record<string, unknown>[], keyIndex: Record<string, number[]> }
 }
 interface StoreContext {
   state: StateInterface,
@@ -72,7 +81,11 @@ const state: StateInterface = {
   buttons: {},
   aliasedActions: {},
   translations: {},
-  mcName: ""
+  mcName: "",
+  editHistory: {
+    events: [],
+    keyIndex: {}
+  }
 }
 const getters = {
 }
@@ -113,6 +126,17 @@ const mutations = {
       return
     }
     state.errorMessages.splice(0, 1)
+  },
+  PUSH_EDIT_EVENT(state: StateInterface, editEvent: Record<string, unknown>) {
+    state.editHistory.events.push(editEvent)
+    if(editEvent.itemKey) {
+      // Create an item key index array if one does not already exist for this item key
+      if(!state.editHistory.keyIndex[editEvent.itemKey as string]) {
+        state.editHistory.keyIndex[editEvent.itemKey as string] = []
+      }
+      // Push this event's key in the events array into the item key index array for this item key
+      state.editHistory.keyIndex[editEvent.itemKey as string].push(state.editHistory.events.length - 1)
+    }
   },
   SET_LOADING(state: StateInterface, loading: boolean) {
     state.loading = loading
@@ -235,6 +259,7 @@ const actions = {
     ctx.state.actionBus?.subscribe(SetCurrentUserCountAction, new SetCurrentUserCountSubscriber())
     ctx.state.actionBus?.subscribe(SetUserCountHistoryAction, new SetUserCountHistorySubscriber())
     ctx.state.actionBus?.subscribe(SystemOutAction, new SystemOutSubscriber())
+    ctx.state.actionBus?.subscribe(PushEditHistoryEventAction, new PushEditHistoryEventSubscriber())
   },
   sendAction(ctx: StoreContext, payload: {action: Action}) {
     if(ctx.state.socket == null || ctx.state.socket.readyState != WebSocket.OPEN) {
