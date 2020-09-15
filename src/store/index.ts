@@ -71,7 +71,8 @@ const state: StateInterface = {
   screens: {},
   buttons: {},
   aliasedActions: {},
-  translations: {}
+  translations: {},
+  mcName: ""
 }
 const getters = {
 }

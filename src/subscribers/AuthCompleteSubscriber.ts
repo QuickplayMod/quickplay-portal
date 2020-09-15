@@ -14,15 +14,16 @@ class AuthCompleteSubscriber extends Subscriber {
     const mcUuid = action.getPayloadObjectAsString(2);
     store.commit("SET_MC_UUID", mcUuid);
 
-    const mcName = await this.getLatestUsername(mcUuid);
-    store.commit("SET_MC_NAME", mcName || "User");
+    this.getLatestUsername(mcUuid).then((name) => {
+      store.commit("SET_MC_NAME", name || "User");
+    })
 
     store.commit("SET_LOADING", false);
   }
 
   async getLatestUsername(uuid: string): Promise<string> {
     // Should be changed to not use an external CORS bypass service, but this works fine for now...
-    const res = await axios.get(`https://cors-anywhere.herokuapp.com/https://api.mojang.com/user/profiles/${uuid}/names`);
+    const res = await axios.get(`https://thingproxy.freeboard.io/fetch/https://api.mojang.com/user/profiles/${uuid}/names`);
     if (res.status != 200) {
       return "";
     }
