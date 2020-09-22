@@ -58,6 +58,12 @@ export default new Vuetify({
           icon: ['fas', 'chevron-left']
         }
       },
+      expand: {
+        component: FontAwesomeIcon,
+        props: {
+          icon: ['fas', 'chevron-down']
+        }
+      },
       dropdown: {
         component: FontAwesomeIcon,
         props: {

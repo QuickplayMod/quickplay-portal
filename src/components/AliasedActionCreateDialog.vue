@@ -75,7 +75,7 @@
                   @locraw-regex-change="v => (this.formHypixelLocrawRegex = v)"
                 />
                 <VBtn @click="showHypixelEditor = true" color="primary">
-                  Edit Hypixel Permissions
+                  Open Hypixel Editor
                 </VBtn>
               </VCol>
             </VRow>

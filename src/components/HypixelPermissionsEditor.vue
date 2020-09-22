@@ -5,7 +5,7 @@
     </template>
     <VCard>
       <VCardTitle class="headline">
-        Edit Hypixel Permissions
+        Open Hypixel Editor
       </VCardTitle>
       <VCardText>
         <VContainer>
@@ -16,6 +16,10 @@
           </p>
           <VForm v-model="formValid">
             <p class="subtitle-1 locraw-header">Location Regex</p>
+            <p>
+              In order for this item to be displayed/usable by the user, all of
+              the below regular expressions must match, unless they are blank.
+            </p>
             <VRow>
               <VCol>
                 <VTextField
@@ -23,12 +27,14 @@
                   label="Server"
                   class="regex-input"
                   spellcheck="false"
+                  hint='"server" value found in /locraw response'
                 />
                 <VTextField
                   v-model="formLocrawRegex.gametype"
                   label="Gametype"
                   class="regex-input"
                   spellcheck="false"
+                  hint='"gametype" value found in /locraw response'
                 />
               </VCol>
               <VCol>
@@ -37,24 +43,64 @@
                   label="Mode"
                   class="regex-input"
                   spellcheck="false"
+                  hint='"mode" value found in /locraw response'
                 />
                 <VTextField
                   v-model="formLocrawRegex.map"
                   label="Map"
                   class="regex-input"
                   spellcheck="false"
+                  hint='"map" value found in /locraw response'
                 />
               </VCol>
             </VRow>
             <VRow>
               <VCol>
                 <p class="subtitle-1">Server Ranks Regex</p>
+                <p>
+                  In order for this item to be displayed/usable by the user,
+                  both of the below regular expressions must be empty or match
+                  their current rank. View the
+                  <a
+                    href="https://github.com/HypixelDev/PublicAPI/wiki/Common-Questions#how-do-i-get-a-players-rank-prefix"
+                    target="_blank"
+                    >Hypixel API documentation</a
+                  >
+                  for examples of valid values.
+                </p>
+                <VExpansionPanels v-model="showPackageRankExamples">
+                  <VExpansionPanel>
+                    <VExpansionPanelHeader>
+                      More Information
+                    </VExpansionPanelHeader>
+                    <VExpansionPanelContent>
+                      <p>
+                        The package rank regular expression combines all
+                        variations of package rank type, and picks the highest
+                        priority.
+                      </p>
+                      <ul>
+                        <li>
+                          A user bought VIP pre-EULA, but bought MVP+ post-EULA.
+                          Their combined package rank would be
+                          <code>MVP_PLUS</code>.
+                        </li>
+                        <li>
+                          A user bought MVP+ (doesn't matter when), and later
+                          subscribed to MVP++. Their combined package rank would
+                          be <code>SUPERSTAR</code>.
+                        </li>
+                      </ul>
+                    </VExpansionPanelContent>
+                  </VExpansionPanel>
+                </VExpansionPanels>
                 <VTextField
                   v-model="formRankRegex"
                   @change="v => $emit('rank-regex-change', v)"
                   label="Rank"
                   class="regex-input"
                   spellcheck="false"
+                  hint="e.g. HELPER, YOUTUBER, ADMIN, etc."
                 />
                 <VTextField
                   v-model="formPackageRankRegex"
@@ -136,7 +182,8 @@ export default {
       formBuildTeamAdminOnly: this.initialBuildTeamAdminOnly,
       formLocrawRegex: this.initialLocrawRegex,
       formRankRegex: this.initialRankRegex,
-      formPackageRankRegex: this.initialPackageRankRegex
+      formPackageRankRegex: this.initialPackageRankRegex,
+      showPackageRankExamples: false
     };
   },
   watch: {
