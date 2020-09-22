@@ -19,7 +19,7 @@
           Home
         </VBtn>
         <VBtn
-          v-if="$store.state.loggedIn"
+          v-if="$store.state.isAdmin && $store.state.loggedIn"
           text
           @click="showEditLog = !showEditLog"
         >
