@@ -55,6 +55,28 @@
                 <p class="subtitle-1">Visibility</p>
                 <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
+                <HypixelPermissionsEditor
+                  v-model="showHypixelEditor"
+                  :initial-build-team-admin-only="formHypixelBuildTeamAdminOnly"
+                  :initial-build-team-only="formHypixelBuildTeamOnly"
+                  :initial-locraw-regex="formHypixelLocrawRegex"
+                  :initial-package-rank-regex="formHypixelPackageRankRegex"
+                  :initial-rank-regex="formHypixelRankRegex"
+                  @rank-regex-change="v => (this.formHypixelRankRegex = v)"
+                  @package-rank-regex-change="
+                    v => (this.formHypixelPackageRankRegex = v)
+                  "
+                  @build-team-only-change="
+                    v => (this.formHypixelBuildTeamOnly = v)
+                  "
+                  @build-team-admin-only-change="
+                    v => (this.formHypixelBuildTeamAdminOnly = v)
+                  "
+                  @locraw-regex-change="v => (this.formHypixelLocrawRegex = v)"
+                />
+                <VBtn @click="showHypixelEditor = true" color="primary">
+                  Edit Hypixel Permissions
+                </VBtn>
               </VCol>
             </VRow>
             <VRow>
@@ -122,9 +144,14 @@
 import { Button, AlterButtonAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
 import AliasedActionsTable from "@/components/AliasedActionsTable";
+import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
 export default {
   name: "ButtonCreateDialog",
-  components: { AliasedActionsTable, TranslationSelector },
+  components: {
+    HypixelPermissionsEditor,
+    AliasedActionsTable,
+    TranslationSelector
+  },
   props: {
     value: {
       type: Boolean,
@@ -157,18 +184,46 @@ export default {
     initialAliasedActionList: {
       type: Array,
       default: () => []
+    },
+    initialHypixelBuildTeamAdminOnly: {
+      type: Boolean,
+      default: false
+    },
+    initialHypixelBuildTeamOnly: {
+      type: Boolean,
+      default: false
+    },
+    initialHypixelLocrawRegex: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    initialHypixelPackageRankRegex: {
+      type: String,
+      default: ""
+    },
+    initialHypixelRankRegex: {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
       formValid: false,
+      showHypixelEditor: false,
       formButtonKey: this.initialButtonKey,
       formSelectedServers: this.initialSelectedServers,
       formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
-      formAliasedActionList: this.initialAliasedActionList
+      formAliasedActionList: this.initialAliasedActionList,
+      formHypixelBuildTeamAdminOnly: this.initialHypixelBuildTeamAdminOnly,
+      formHypixelBuildTeamOnly: this.initialHypixelBuildTeamOnly,
+      formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
+      formHypixelPackageRankRegex: this.initialHypixelPackageRankRegex,
+      formHypixelRankRegex: this.initialHypixelRankRegex
     };
   },
   computed: {
@@ -255,6 +310,11 @@ export default {
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
       this.formAliasedActionList = this.initialAliasedActionList;
+      this.formHypixelBuildTeamAdminOnly = this.initialHypixelBuildTeamAdminOnly;
+      this.formHypixelBuildTeamOnly = this.initialHypixelBuildTeamOnly;
+      this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
+      this.formHypixelPackageRankRegex = this.initialHypixelPackageRankRegex;
+      this.formHypixelRankRegex = this.initialHypixelRankRegex;
     },
     async submit() {
       const currentButton = this.$store.state.buttons[this.formButtonKey];
@@ -277,6 +337,11 @@ export default {
       button.actions = this.formAliasedActionList;
       button.visible = this.formVisible;
       button.adminOnly = this.formAdminOnly;
+      button.hypixelBuildTeamAdminOnly = this.formHypixelBuildTeamAdminOnly;
+      button.hypixelBuildTeamOnly = this.formHypixelBuildTeamOnly;
+      button.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
+      button.hypixelRankRegex = this.formHypixelRankRegex;
+      button.hypixelLocrawRegex = this.formHypixelLocrawRegex;
       const action = new AlterButtonAction(this.formButtonKey, button);
       await this.$store.dispatch("sendAction", {
         action: action

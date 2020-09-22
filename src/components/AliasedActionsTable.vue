@@ -58,6 +58,15 @@
         :initial-admin-only="editorInitialAdminOnlyValue"
         :initial-action-type="editorInitialActionType"
         :initial-action-arg="editorInitialActionArg"
+        :initial-hypixel-build-team-admin-only="
+          editorInitialHypixelBuildTeamAdminOnly
+        "
+        :initial-hypixel-build-team-only="editorInitialHypixelBuildTeamOnly"
+        :initial-hypixel-locraw-regex="editorInitialHypixelLocrawRegex"
+        :initial-hypixel-package-rank-regex="
+          editorInitialHypixelPackageRankRegex
+        "
+        :initial-hypixel-rank-regex="editorInitialHypixelRankRegex"
       />
     </template>
   </QuickplayItemTable>
@@ -95,6 +104,11 @@ export default {
       editorInitialAdminOnlyValue: false,
       editorInitialActionType: "SendChatCommandAction",
       editorInitialActionArg: "/play ",
+      editorInitialHypixelPackageRankRegex: "",
+      editorInitialHypixelRankRegex: "",
+      editorInitialHypixelLocrawRegex: "",
+      editorInitialHypixelBuildTeamOnly: false,
+      editorInitialHypixelBuildTeamAdminOnly: false,
       headers: [
         {
           text: "Aliased Action Key",
@@ -124,6 +138,11 @@ export default {
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialActionType = "SendChatCommandAction";
       this.editorInitialActionArg = "/play ";
+      this.editorInitialHypixelRankRegex = "";
+      this.editorInitialHypixelPackageRankRegex = "";
+      this.editorInitialHypixelLocrawRegex = {};
+      this.editorInitialHypixelBuildTeamOnly = false;
+      this.editorInitialHypixelBuildTeamAdminOnly = false;
       this.showEditMenu = true;
     },
     moveUpItem(item) {
@@ -147,6 +166,14 @@ export default {
       this.editorInitialSelectedServersValue = item.availableOn || [];
       this.editorInitialVisibleValue = !!item.visible;
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
+      this.editorInitialHypixelBuildTeamAdminOnly =
+        item.hypixelBuildTeamAdminOnly || false;
+      this.editorInitialHypixelBuildTeamOnly =
+        item.hypixelBuildTeamOnly || false;
+      this.editorInitialHypixelLocrawRegex = item.hypixelLocrawRegex || {};
+      this.editorInitialHypixelPackageRankRegex =
+        item.hypixelPackageRankRegex || "";
+      this.editorInitialHypixelRankRegex = item.hypixelRankRegex || "";
       this.editorInitialActionType =
         item.action.id === 11 ? "OpenScreenAction" : "SendChatCommandAction";
       this.editorInitialActionArg = item.action.getPayloadObjectAsString(0);

@@ -55,6 +55,28 @@
                 <p class="subtitle-1">Visibility</p>
                 <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
+                <HypixelPermissionsEditor
+                  v-model="showHypixelEditor"
+                  :initial-build-team-admin-only="formHypixelBuildTeamAdminOnly"
+                  :initial-build-team-only="formHypixelBuildTeamOnly"
+                  :initial-locraw-regex="formHypixelLocrawRegex"
+                  :initial-package-rank-regex="formHypixelPackageRankRegex"
+                  :initial-rank-regex="formHypixelRankRegex"
+                  @rank-regex-change="v => (this.formHypixelRankRegex = v)"
+                  @package-rank-regex-change="
+                    v => (this.formHypixelPackageRankRegex = v)
+                  "
+                  @build-team-only-change="
+                    v => (this.formHypixelBuildTeamOnly = v)
+                  "
+                  @build-team-admin-only-change="
+                    v => (this.formHypixelBuildTeamAdminOnly = v)
+                  "
+                  @locraw-regex-change="v => (this.formHypixelLocrawRegex = v)"
+                />
+                <VBtn @click="showHypixelEditor = true" color="primary">
+                  Edit Hypixel Permissions
+                </VBtn>
               </VCol>
             </VRow>
             <VRow>
@@ -119,8 +141,10 @@ import {
   OpenScreenAction,
   SendChatCommandAction
 } from "@quickplaymod/quickplay-actions-js";
+import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
 export default {
   name: "AliasedActionCreateDialog",
+  components: { HypixelPermissionsEditor },
   props: {
     value: {
       type: Boolean,
@@ -149,17 +173,45 @@ export default {
     initialActionArg: {
       type: String,
       default: "/play "
+    },
+    initialHypixelBuildTeamAdminOnly: {
+      type: Boolean,
+      default: false
+    },
+    initialHypixelBuildTeamOnly: {
+      type: Boolean,
+      default: false
+    },
+    initialHypixelLocrawRegex: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    initialHypixelPackageRankRegex: {
+      type: String,
+      default: ""
+    },
+    initialHypixelRankRegex: {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
       formValid: false,
+      showHypixelEditor: false,
       formAliasedActionKey: this.initialAliasedActionKey,
       formSelectedServers: this.initialSelectedServers,
       formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formActionType: this.initialActionType,
       formActionArg: this.initialActionArg,
+      formHypixelBuildTeamAdminOnly: this.initialHypixelBuildTeamAdminOnly,
+      formHypixelBuildTeamOnly: this.initialHypixelBuildTeamOnly,
+      formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
+      formHypixelPackageRankRegex: this.initialHypixelPackageRankRegex,
+      formHypixelRankRegex: this.initialHypixelRankRegex,
       actionsAvailable: ["OpenScreenAction", "SendChatCommandAction"],
       blockedCommands: [
         "me",
@@ -290,6 +342,11 @@ export default {
       this.formAdminOnly = this.initialAdminOnly;
       this.formActionType = this.initialActionType;
       this.formActionArg = this.initialActionArg;
+      this.formHypixelBuildTeamAdminOnly = this.initialHypixelBuildTeamAdminOnly;
+      this.formHypixelBuildTeamOnly = this.initialHypixelBuildTeamOnly;
+      this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
+      this.formHypixelPackageRankRegex = this.initialHypixelPackageRankRegex;
+      this.formHypixelRankRegex = this.initialHypixelRankRegex;
     },
     submit() {
       const aliasedAction = new AliasedAction(this.formAliasedActionKey);
@@ -301,6 +358,11 @@ export default {
       aliasedAction.action = new actionClass(this.formActionArg);
       aliasedAction.visible = this.formVisible;
       aliasedAction.adminOnly = this.formAdminOnly;
+      aliasedAction.hypixelBuildTeamAdminOnly = this.formHypixelBuildTeamAdminOnly;
+      aliasedAction.hypixelBuildTeamOnly = this.formHypixelBuildTeamOnly;
+      aliasedAction.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
+      aliasedAction.hypixelRankRegex = this.formHypixelRankRegex;
+      aliasedAction.hypixelLocrawRegex = this.formHypixelLocrawRegex;
       const action = new AlterAliasedActionAction(
         this.formAliasedActionKey,
         aliasedAction

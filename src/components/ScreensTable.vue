@@ -55,6 +55,15 @@
         :initial-translation-key="editorInitialTranslationKeyValue"
         :initial-button-list="editorInitialButtonList"
         :initial-aliased-action-list="editorInitialAliasedActionList"
+        :initial-hypixel-build-team-admin-only="
+          editorInitialHypixelBuildTeamAdminOnly
+        "
+        :initial-hypixel-build-team-only="editorInitialHypixelBuildTeamOnly"
+        :initial-hypixel-locraw-regex="editorInitialHypixelLocrawRegex"
+        :initial-hypixel-package-rank-regex="
+          editorInitialHypixelPackageRankRegex
+        "
+        :initial-hypixel-rank-regex="editorInitialHypixelRankRegex"
       />
     </template>
     <template v-slot:expandable="{ item }">
@@ -131,6 +140,11 @@ export default {
       editorInitialTranslationKeyValue: "",
       editorInitialButtonList: [],
       editorInitialAliasedActionList: [],
+      editorInitialHypixelPackageRankRegex: "",
+      editorInitialHypixelRankRegex: "",
+      editorInitialHypixelLocrawRegex: {},
+      editorInitialHypixelBuildTeamOnly: false,
+      editorInitialHypixelBuildTeamAdminOnly: false,
       screenTab: null,
       search: "",
       headers: [
@@ -224,6 +238,11 @@ export default {
       this.editorInitialTranslationKeyValue = "";
       this.editorInitialButtonList = [];
       this.editorInitialAliasedActionList = [];
+      this.editorInitialHypixelRankRegex = "";
+      this.editorInitialHypixelPackageRankRegex = "";
+      this.editorInitialHypixelLocrawRegex = {};
+      this.editorInitialHypixelBuildTeamOnly = false;
+      this.editorInitialHypixelBuildTeamAdminOnly = false;
       this.showEditMenu = true;
     },
     editItem(item) {
@@ -236,6 +255,14 @@ export default {
       this.editorInitialTranslationKeyValue = item.translationKey || "";
       this.editorInitialButtonList = item.buttons || [];
       this.editorInitialAliasedActionList = item.backButtonActions || [];
+      this.editorInitialHypixelBuildTeamAdminOnly =
+        item.hypixelBuildTeamAdminOnly || false;
+      this.editorInitialHypixelBuildTeamOnly =
+        item.hypixelBuildTeamOnly || false;
+      this.editorInitialHypixelLocrawRegex = item.hypixelLocrawRegex || {};
+      this.editorInitialHypixelPackageRankRegex =
+        item.hypixelPackageRankRegex || "";
+      this.editorInitialHypixelRankRegex = item.hypixelRankRegex || "";
       this.showEditMenu = true;
     },
     deleteItem(item) {

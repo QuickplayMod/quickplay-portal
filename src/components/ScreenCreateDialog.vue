@@ -75,6 +75,28 @@
                 <p class="subtitle-1">Visibility</p>
                 <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
+                <HypixelPermissionsEditor
+                  v-model="showHypixelEditor"
+                  :initial-build-team-admin-only="formHypixelBuildTeamAdminOnly"
+                  :initial-build-team-only="formHypixelBuildTeamOnly"
+                  :initial-locraw-regex="formHypixelLocrawRegex"
+                  :initial-package-rank-regex="formHypixelPackageRankRegex"
+                  :initial-rank-regex="formHypixelRankRegex"
+                  @rank-regex-change="v => (this.formHypixelRankRegex = v)"
+                  @package-rank-regex-change="
+                    v => (this.formHypixelPackageRankRegex = v)
+                  "
+                  @build-team-only-change="
+                    v => (this.formHypixelBuildTeamOnly = v)
+                  "
+                  @build-team-admin-only-change="
+                    v => (this.formHypixelBuildTeamAdminOnly = v)
+                  "
+                  @locraw-regex-change="v => (this.formHypixelLocrawRegex = v)"
+                />
+                <VBtn @click="showHypixelEditor = true" color="primary">
+                  Edit Hypixel Permissions
+                </VBtn>
               </VCol>
             </VRow>
             <VRow>
@@ -152,9 +174,15 @@ import { Screen, AlterScreenAction } from "@quickplaymod/quickplay-actions-js";
 import TranslationSelector from "@/components/TranslationSelector";
 import ButtonsTable from "@/components/ButtonsTable";
 import AliasedActionsTable from "@/components/AliasedActionsTable";
+import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
 export default {
   name: "ScreenCreateDialog",
-  components: { AliasedActionsTable, ButtonsTable, TranslationSelector },
+  components: {
+    HypixelPermissionsEditor,
+    AliasedActionsTable,
+    ButtonsTable,
+    TranslationSelector
+  },
   props: {
     value: {
       type: Boolean,
@@ -195,12 +223,35 @@ export default {
     initialAliasedActionList: {
       type: Array,
       default: () => []
+    },
+    initialHypixelBuildTeamAdminOnly: {
+      type: Boolean,
+      default: false
+    },
+    initialHypixelBuildTeamOnly: {
+      type: Boolean,
+      default: false
+    },
+    initialHypixelLocrawRegex: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    initialHypixelPackageRankRegex: {
+      type: String,
+      default: ""
+    },
+    initialHypixelRankRegex: {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
       showTranslationList: false,
       formValid: false,
+      showHypixelEditor: false,
       formScreenKey: this.initialScreenKey,
       formScreenType: this.initialScreenType,
       formSelectedServers: this.initialSelectedServers,
@@ -210,6 +261,11 @@ export default {
       formTranslationKey: this.initialTranslationKey,
       formButtonList: this.initialButtonList,
       formAliasedActionList: this.initialAliasedActionList,
+      formHypixelBuildTeamAdminOnly: this.initialHypixelBuildTeamAdminOnly,
+      formHypixelBuildTeamOnly: this.initialHypixelBuildTeamOnly,
+      formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
+      formHypixelPackageRankRegex: this.initialHypixelPackageRankRegex,
+      formHypixelRankRegex: this.initialHypixelRankRegex,
       tab: ""
     };
   },
@@ -321,6 +377,11 @@ export default {
       this.formTranslationKey = this.initialTranslationKey;
       this.formButtonList = this.initialButtonList;
       this.formAliasedActionList = this.initialAliasedActionList;
+      this.formHypixelBuildTeamAdminOnly = this.initialHypixelBuildTeamAdminOnly;
+      this.formHypixelBuildTeamOnly = this.initialHypixelBuildTeamOnly;
+      this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
+      this.formHypixelPackageRankRegex = this.initialHypixelPackageRankRegex;
+      this.formHypixelRankRegex = this.initialHypixelRankRegex;
     },
     async submit() {
       const currentScreen = this.$store.state.screens[this.formScreenKey];
@@ -344,6 +405,11 @@ export default {
       screen.backButtonActions = this.formAliasedActionList;
       screen.visible = this.formVisible;
       screen.adminOnly = this.formAdminOnly;
+      screen.hypixelBuildTeamAdminOnly = this.formHypixelBuildTeamAdminOnly;
+      screen.hypixelBuildTeamOnly = this.formHypixelBuildTeamOnly;
+      screen.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
+      screen.hypixelRankRegex = this.formHypixelRankRegex;
+      screen.hypixelLocrawRegex = this.formHypixelLocrawRegex;
       const action = new AlterScreenAction(this.formScreenKey, screen);
       await this.$store.dispatch("sendAction", {
         action: action
