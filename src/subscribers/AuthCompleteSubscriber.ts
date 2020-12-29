@@ -7,23 +7,28 @@ class AuthCompleteSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
     console.log("Authentication Complete");
     store.commit("SET_LOGGED_IN", true);
-    Vue.$cookies.set(process.env.VUE_APP_SESSION_COOKIE, action.getPayloadObjectAsString(0));
+    Vue.$cookies.set(
+      process.env.VUE_APP_SESSION_COOKIE,
+      action.getPayloadObjectAsString(0)
+    );
 
     const isAdmin = !!action.getPayloadObject(5).readUInt8(0);
     store.commit("SET_IS_ADMIN", isAdmin);
     const mcUuid = action.getPayloadObjectAsString(2);
     store.commit("SET_MC_UUID", mcUuid);
 
-    this.getLatestUsername(mcUuid).then((name) => {
+    this.getLatestUsername(mcUuid).then(name => {
       store.commit("SET_MC_NAME", name || "User");
-    })
+    });
 
     store.commit("SET_LOADING", false);
   }
 
   async getLatestUsername(uuid: string): Promise<string> {
     // Should be changed to not use an external CORS bypass service, but this works fine for now...
-    const res = await axios.get(`https://thingproxy.freeboard.io/fetch/https://api.mojang.com/user/profiles/${uuid}/names`);
+    const res = await axios.get(
+      `https://thingproxy.freeboard.io/fetch/https://api.mojang.com/user/profiles/${uuid}/names`
+    );
     if (res.status != 200) {
       return "";
     }
@@ -39,17 +44,20 @@ class AuthCompleteSubscriber extends Subscriber {
       if (!res.data.hasOwnProperty(prop)) {
         continue;
       }
-      if (!latestName || (latestName.changedToAt || 0) < res.data[prop].changedToAt) {
+      if (
+        !latestName ||
+        (latestName.changedToAt || 0) < res.data[prop].changedToAt
+      ) {
         latestName = res.data[prop];
       }
     }
 
     if (latestName == null) {
-      return ""
+      return "";
     }
 
     return latestName.name;
   }
 }
 
-export default AuthCompleteSubscriber
+export default AuthCompleteSubscriber;

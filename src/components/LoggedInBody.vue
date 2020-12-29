@@ -1,7 +1,7 @@
 <template>
   <VRow>
     <VCol cols="12" md="6" sm="12">
-      <ConnectionsChart />
+      <ConnectionsChart :width="null" :height="null" />
     </VCol>
     <VCol cols="12" md="6" sm="12" class="welcome-col">
       <QuickplayWelcome />

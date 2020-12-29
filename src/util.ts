@@ -1,4 +1,4 @@
-import store from '../src/store/index'
+import store from "../src/store/index";
 
 /**
  * Prettify a URL to convert it from a raw URL into an easier to read link.
@@ -7,15 +7,15 @@ import store from '../src/store/index'
  * @return {string} Prettified URL to display for user.
  */
 function prettifyUrl(url: string): string {
-    let result: string
-    // Remove protocol
-    result = url.replace(/^\w+:\/\//gi, '')
-    if(result.length > 30) {
-        const start = result.slice(0, 12);
-        const end = result.slice(result.length - 12, result.length)
-        result = start + '...' + end
-    }
-    return result
+  let result: string;
+  // Remove protocol
+  result = url.replace(/^\w+:\/\//gi, "");
+  if (result.length > 30) {
+    const start = result.slice(0, 12);
+    const end = result.slice(result.length - 12, result.length);
+    result = start + "..." + end;
+  }
+  return result;
 }
 
 /**
@@ -25,14 +25,14 @@ function prettifyUrl(url: string): string {
  * @return {string} The translated string.
  */
 function translate(key: string): string {
-    if (!store.state.translations) {
-        return key;
-    } else if (!store.state.translations[key]) {
-        return key;
-    } else if (!store.state.translations[key]["en_us"]) {
-        return key;
-    }
-    return store.state.translations[key]["en_us"];
+  if (!store.state.translations) {
+    return key;
+  } else if (!store.state.translations[key]) {
+    return key;
+  } else if (!store.state.translations[key]["en_us"]) {
+    return key;
+  }
+  return store.state.translations[key]["en_us"];
 }
 
-export { prettifyUrl, translate }
+export { prettifyUrl, translate };
