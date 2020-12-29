@@ -22,7 +22,7 @@ import {
   Screen,
   Button,
   AliasedAction,
-  PushEditHistoryEventAction
+  PushEditHistoryEventAction, SetCurrentUserCountAction
 } from "@quickplaymod/quickplay-actions-js";
 import { Buffer } from "buffer";
 import AuthCompleteSubscriber from "@/subscribers/AuthCompleteSubscriber";
@@ -42,6 +42,7 @@ import SystemOutSubscriber from "@/subscribers/SystemOutSubscriber";
 import RemoveTranslationSubscriber from "@/subscribers/RemoveTranslationSubscriber";
 import PushEditHistoryEventSubscriber from "@/subscribers/PushEditHistoryEventSubscriber";
 import AddUserCountHistoryAction from "@quickplaymod/quickplay-actions-js/dist/actions/clientbound/AddUserCountHistoryAction";
+import SetCurrentUserCountSubscriber from "@/subscribers/SetCurrentUserCountSubscriber";
 
 Vue.use(Vuex);
 
@@ -62,6 +63,7 @@ interface StateInterface {
   aliasedActions: Record<string, AliasedAction>;
   translations: Record<string, Record<string, string>>;
   connectionHistory: Record<number, number>;
+  currentConnections: number;
   editHistory: {
     events: Record<string, unknown>[];
     keyIndex: Record<string, number[]>;
@@ -88,6 +90,7 @@ const state: StateInterface = {
     events: [],
     keyIndex: {}
   },
+  currentConnections: 0,
   connectionHistory: {}
 };
 const getters = {};
@@ -193,6 +196,9 @@ const mutations = {
       Vue.set(state, "connectionHistory", {});
     }
     Vue.set(state.connectionHistory, data.timestamp, data.count);
+  },
+  SET_CURRENT_CONNECTIONS(state: StateInterface, currentConnections: number) {
+    state.currentConnections = currentConnections;
   }
 };
 const actions = {
@@ -319,10 +325,10 @@ const actions = {
       SendChatComponentAction,
       new SendChatComponentSubscriber()
     );
-    // ctx.state.actionBus?.subscribe(
-    //   SetCurrentUserCountAction,
-    //   new AddUserCountHistorySubscriber()
-    // );
+    ctx.state.actionBus?.subscribe(
+      SetCurrentUserCountAction,
+      new SetCurrentUserCountSubscriber()
+    );
     ctx.state.actionBus?.subscribe(
       AddUserCountHistoryAction,
       new AddUserCountHistorySubscriber()

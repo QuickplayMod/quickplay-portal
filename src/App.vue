@@ -35,6 +35,9 @@
         <VBtn text v-else @click="init">
           Log in
         </VBtn>
+        <VBtn text v-if="$store.state.loggedIn">
+          Users: {{ $store.state.currentConnections }}
+        </VBtn>
       </div>
     </VAppBar>
 
