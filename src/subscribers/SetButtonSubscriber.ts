@@ -5,8 +5,6 @@ import Button from "@quickplaymod/quickplay-actions-js/dist/Button";
 class SetButtonSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
     const button = new Button(action.getPayloadObjectAsString(0));
-    console.log("New button received");
-    console.log(button);
     button.availableOn = JSON.parse(action.getPayloadObjectAsString(1));
     button.actions = JSON.parse(action.getPayloadObjectAsString(2));
     button.imageURL = action.getPayloadObjectAsString(3);
