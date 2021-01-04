@@ -5,6 +5,8 @@ import Button from "@quickplaymod/quickplay-actions-js/dist/Button";
 class SetButtonSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
     const button = new Button(action.getPayloadObjectAsString(0));
+    console.log("New button received");
+    console.log(button);
     button.availableOn = JSON.parse(action.getPayloadObjectAsString(1));
     button.actions = JSON.parse(action.getPayloadObjectAsString(2));
     button.imageURL = action.getPayloadObjectAsString(3);
@@ -17,6 +19,7 @@ class SetButtonSubscriber extends Subscriber {
     button.hypixelBuildTeamOnly = action.getPayloadObject(10).readUInt8(0) != 0;
     button.hypixelBuildTeamAdminOnly =
       action.getPayloadObject(11).readUInt8(0) != 0;
+    button.visibleInPartyMode = action.getPayloadObject(12).readUInt8(0) != 0;
     store.commit("SET_BUTTON", { key: button.key, value: button });
   }
 }

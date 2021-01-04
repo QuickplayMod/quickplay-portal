@@ -56,6 +56,7 @@
         :initial-selected-servers="editorInitialSelectedServersValue"
         :initial-visible="editorInitialVisibleValue"
         :initial-admin-only="editorInitialAdminOnlyValue"
+        :initial-visible-in-party-mode="editorInitialVisibleInPartyMode"
         :initial-image-url="editorInitialImageUrlValue"
         :initial-translation-key="editorInitialTranslationKeyValue"
         :initial-aliased-action-list="editorInitialAliasedActionList"
@@ -116,6 +117,7 @@ export default {
       editorInitialSelectedServersValue: [],
       editorInitialVisibleValue: true,
       editorInitialAdminOnlyValue: false,
+      editorInitialVisibleInPartyMode: true,
       editorInitialImageUrlValue: "",
       editorInitialTranslationKeyValue: "",
       editorInitialAliasedActionList: [],
@@ -181,6 +183,7 @@ export default {
       ];
       this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
+      this.editorInitialVisibleInPartyMode = true;
       this.editorInitialImageUrlValue = "";
       this.editorInitialTranslationKeyValue = "";
       this.editorInitialAliasedActionList = [];
@@ -212,6 +215,7 @@ export default {
       this.editorInitialSelectedServersValue = item.availableOn || [];
       this.editorInitialVisibleValue = !!item.visible;
       this.editorInitialAdminOnlyValue = !!item.adminOnly;
+      this.editorInitialVisibleInPartyMode = !!item.visibleInPartyMode;
       this.editorInitialImageUrlValue = item.imageURL || "";
       this.editorInitialTranslationKeyValue = item.translationKey || "";
       this.editorInitialAliasedActionList = item.actions || [];

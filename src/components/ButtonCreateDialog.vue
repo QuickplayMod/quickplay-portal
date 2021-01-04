@@ -55,6 +55,10 @@
                 <p class="subtitle-1">Visibility</p>
                 <VCheckbox v-model="formVisible" label="Visible" />
                 <VCheckbox v-model="formAdminOnly" label="Admin-only" />
+                <VCheckbox
+                  v-model="formVisibleInPartyMode"
+                  label="Visible in Party Mode"
+                />
                 <HypixelPermissionsEditor
                   v-model="showHypixelEditor"
                   :initial-build-team-admin-only="formHypixelBuildTeamAdminOnly"
@@ -173,6 +177,10 @@ export default {
       type: Boolean,
       default: false
     },
+    initialVisibleInPartyMode: {
+      type: Boolean,
+      default: true
+    },
     initialImageUrl: {
       type: String,
       default: ""
@@ -216,6 +224,7 @@ export default {
       formSelectedServers: this.initialSelectedServers,
       formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
+      formVisibleInPartyMode: this.initialVisibleInPartyMode,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
       formAliasedActionList: this.initialAliasedActionList,
@@ -307,6 +316,7 @@ export default {
       this.formSelectedServers = this.initialSelectedServers;
       this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
+      this.formVisibleInPartyMode = this.initialVisibleInPartyMode
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
       this.formAliasedActionList = this.initialAliasedActionList;
@@ -337,6 +347,7 @@ export default {
       button.actions = this.formAliasedActionList;
       button.visible = this.formVisible;
       button.adminOnly = this.formAdminOnly;
+      button.visibleInPartyMode = this.formVisibleInPartyMode;
       button.hypixelBuildTeamAdminOnly = this.formHypixelBuildTeamAdminOnly;
       button.hypixelBuildTeamOnly = this.formHypixelBuildTeamOnly;
       button.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
