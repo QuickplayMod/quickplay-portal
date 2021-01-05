@@ -59,6 +59,9 @@
         :initial-visible-in-party-mode="editorInitialVisibleInPartyMode"
         :initial-image-url="editorInitialImageUrlValue"
         :initial-translation-key="editorInitialTranslationKeyValue"
+        :initial-party-mode-scope-translation-key="
+          editorInitialPartyModeScopeTranslationKeyValue
+        "
         :initial-aliased-action-list="editorInitialAliasedActionList"
         :initial-hypixel-build-team-admin-only="
           editorInitialHypixelBuildTeamAdminOnly
@@ -120,6 +123,7 @@ export default {
       editorInitialVisibleInPartyMode: true,
       editorInitialImageUrlValue: "",
       editorInitialTranslationKeyValue: "",
+      editorInitialPartyModeScopeTranslationKeyValue: "",
       editorInitialAliasedActionList: [],
       editorInitialHypixelPackageRankRegex: "",
       editorInitialHypixelRankRegex: "",
@@ -186,6 +190,7 @@ export default {
       this.editorInitialVisibleInPartyMode = true;
       this.editorInitialImageUrlValue = "";
       this.editorInitialTranslationKeyValue = "";
+      this.editorInitialPartyModeScopeTranslationKeyValue = "";
       this.editorInitialAliasedActionList = [];
       this.editorInitialHypixelRankRegex = "";
       this.editorInitialHypixelPackageRankRegex = "";
@@ -218,6 +223,8 @@ export default {
       this.editorInitialVisibleInPartyMode = !!item.visibleInPartyMode;
       this.editorInitialImageUrlValue = item.imageURL || "";
       this.editorInitialTranslationKeyValue = item.translationKey || "";
+      this.editorInitialPartyModeScopeTranslationKeyValue =
+        item.partyModeScopeTranslationKey || "";
       this.editorInitialAliasedActionList = item.actions || [];
       this.editorInitialHypixelBuildTeamAdminOnly =
         item.hypixelBuildTeamAdminOnly || false;

@@ -101,6 +101,14 @@
                   v-model="formTranslationKey"
                   :rules="[validateTranslationKey]"
                 />
+                <p class="subtitle-1">
+                  Party Mode Scope Translation
+                </p>
+                <TranslationSelector
+                  v-model="formPartyModeScopeTranslationKey"
+                  :rules="[validateTranslationKey]"
+                  :clearable="true"
+                />
               </VCol>
             </VRow>
             <VRow>
@@ -189,6 +197,10 @@ export default {
       type: String,
       default: ""
     },
+    initialPartyModeScopeTranslationKey: {
+      type: String,
+      default: ""
+    },
     initialAliasedActionList: {
       type: Array,
       default: () => []
@@ -227,6 +239,8 @@ export default {
       formVisibleInPartyMode: this.initialVisibleInPartyMode,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
+      formPartyModeScopeTranslationKey: this
+        .initialPartyModeScopeTranslationKey,
       formAliasedActionList: this.initialAliasedActionList,
       formHypixelBuildTeamAdminOnly: this.initialHypixelBuildTeamAdminOnly,
       formHypixelBuildTeamOnly: this.initialHypixelBuildTeamOnly,
@@ -316,9 +330,10 @@ export default {
       this.formSelectedServers = this.initialSelectedServers;
       this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
-      this.formVisibleInPartyMode = this.initialVisibleInPartyMode
+      this.formVisibleInPartyMode = this.initialVisibleInPartyMode;
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
+      this.formPartyModeScopeTranslationKey = this.initialPartyModeScopeTranslationKey;
       this.formAliasedActionList = this.initialAliasedActionList;
       this.formHypixelBuildTeamAdminOnly = this.initialHypixelBuildTeamAdminOnly;
       this.formHypixelBuildTeamOnly = this.initialHypixelBuildTeamOnly;
@@ -344,6 +359,7 @@ export default {
       button.availableOn = this.formSelectedServers;
       button.imageURL = this.formImageUrl;
       button.translationKey = this.formTranslationKey;
+      button.partyModeScopeTranslationKey = this.formPartyModeScopeTranslationKey;
       button.actions = this.formAliasedActionList;
       button.visible = this.formVisible;
       button.adminOnly = this.formAdminOnly;

@@ -18,6 +18,7 @@ class SetButtonSubscriber extends Subscriber {
     button.hypixelBuildTeamAdminOnly =
       action.getPayloadObject(11).readUInt8(0) != 0;
     button.visibleInPartyMode = action.getPayloadObject(12).readUInt8(0) != 0;
+    button.partyModeScopeTranslationKey = action.getPayloadObjectAsString(13);
     store.commit("SET_BUTTON", { key: button.key, value: button });
   }
 }
