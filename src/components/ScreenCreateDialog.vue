@@ -7,6 +7,19 @@
       <VCardText>
         <VContainer>
           <VForm v-model="formValid">
+            <div class="action-btns">
+              <VBtn class="cancel-btn" @click="cancelClicked">
+                Cancel
+              </VBtn>
+              <VBtn
+                class="submit-btn"
+                color="primary"
+                @click="submit"
+                :disabled="!formValid"
+              >
+                Submit
+              </VBtn>
+            </div>
             <VRow>
               <VCol>
                 <VTextField
@@ -150,7 +163,7 @@
             Buttons and Keybinds reference Screens by their key. You should not
             change a Screen's key unless you know what you are doing.
           </VAlert>
-          <div class="action-btns">
+          <div class="action-btns lower-action-btns">
             <VBtn class="cancel-btn" @click="cancelClicked">
               Cancel
             </VBtn>
@@ -427,6 +440,9 @@ export default {
   }
   display: flex;
   justify-content: flex-end;
+  &.lower-action-btns {
+    margin-top: 15px;
+  }
 }
 .available-on-checkbox {
   margin: 0;
