@@ -106,8 +106,7 @@
                 </p>
                 <TranslationSelector
                   v-model="formPartyModeScopeTranslationKey"
-                  :rules="[validateTranslationKey]"
-                  :clearable="true"
+                  clearable
                 />
               </VCol>
             </VRow>
