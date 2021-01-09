@@ -107,11 +107,11 @@ export default {
     },
     initialTranslationKey: {
       type: String,
-      default: ""
+      default: "quickplay.games."
     },
     initialTranslationLang: {
       type: String,
-      default: ""
+      default: "en_us"
     },
     initialTranslationValue: {
       type: String,
