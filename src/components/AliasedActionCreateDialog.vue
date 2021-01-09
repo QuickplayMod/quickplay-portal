@@ -128,6 +128,13 @@
               </VCol>
             </VRow>
           </VForm>
+          <VAlert
+            type="warning"
+            v-if="initialAliasedActionKey && formAliasedActionKey !== initialAliasedActionKey"
+          >
+            Screens and Buttons reference Aliased Actions by their key. You should
+            not change an Aliased Action's key unless you know what you are doing.
+          </VAlert>
           <div class="action-btns lower-action-btns">
             <VBtn class="cancel-btn" @click="cancelClicked">
               Cancel
