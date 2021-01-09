@@ -185,7 +185,7 @@ export default {
     },
     initialActionArg: {
       type: String,
-      default: "/play "
+      default: "play "
     },
     initialHypixelBuildTeamAdminOnly: {
       type: Boolean,
@@ -287,7 +287,7 @@ export default {
         !this.formActionArg &&
         this.formActionType === "SendChatCommandAction"
       ) {
-        this.formActionArg = "/play ";
+        this.formActionArg = "play ";
       } else {
         this.formActionArg = "";
       }
