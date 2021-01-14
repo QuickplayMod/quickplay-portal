@@ -6,8 +6,10 @@ COPY ./package.json .
 COPY ./package-lock.json .
 RUN --mount=type=secret,id=npmrc,dst=/root/.npmrc npm install
 COPY . .
-RUN npm run build
 
+ARG DOCKER_ENV
+ENV NODE_ENV=${DOCKER_ENV}
+RUN npm run build
 
 FROM nginx as production-stage
 RUN mkdir /usr/src/app

@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  portal:
+    image: quickplaymod/quickplay-portal
+    depends_on:
+      - db
+      - redis
+      - socket
+    ports:
+      - "43515:80"
+    restart: unless-stopped
+    env_file:
+      - .env
+      - .env.development
+  socket:
+    depends_on:
+      - db
+      - redis
+    image: quickplaymod/quickplay-socket
+    ports:
+      - "54678:80"
+    restart: unless-stopped
+    volumes:
+      - ../glyphs-volume:/usr/src/app/glyphs
+    env_file:
+      - socket.env
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - ../redis-volume:/var/lib/redis
+  db:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    volumes:
+      - ../db-volume:/var/lib/mysql
+    env_file:
+      - docker-db.env

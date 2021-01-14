@@ -14,11 +14,13 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
+### Build Docker image (development)
 ```
-npm run lint
+DOCKER_BUILDKIT=1 docker build --tag quickplaymod/quickplay-portal-build-stage --target=build-stage --build-arg DOCKER_ENV=development --secret id=npmrc,src=.npmrc .
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Build Docker image (production)
+```
+DOCKER_BUILDKIT=1 docker build --tag quickplaymod/quickplay-portal --build-arg DOCKER_ENV=production --secret id=npmrc,src=.npmrc .
+```
+
