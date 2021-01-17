@@ -7,10 +7,40 @@
     @delete="deleteItem"
   >
     <template v-slot:editor="{}">
+      <BulkTranslationUpload v-model="showBulkUploadDialog" />
       <div class="new-button-wrapper">
-        <VBtn fab color="primary" dark @click="newItemButtonClicked">
-          <FontAwesomeIcon :icon="['fas', 'plus']" class="plus-icon" />
-        </VBtn>
+        <VTooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn
+              class="upload-btn"
+              fab
+              color="secondary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              @click="bulkUploadButtonClicked"
+            >
+              <FontAwesomeIcon :icon="['fas', 'upload']" class="plus-icon" />
+            </VBtn>
+          </template>
+          <span>Bulk Upload</span>
+        </VTooltip>
+
+        <VTooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn
+              fab
+              color="primary"
+              dark
+              @click="newItemButtonClicked"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <FontAwesomeIcon :icon="['fas', 'plus']" class="plus-icon" />
+            </VBtn>
+          </template>
+          <span>Create New</span>
+        </VTooltip>
       </div>
       <TranslationCreateDialog
         v-if="showEditMenu"
@@ -27,9 +57,11 @@
 import { DeleteTranslationAction } from "@quickplaymod/quickplay-actions-js";
 import QuickplayItemTable from "@/components/QuickplayItemTable";
 import TranslationCreateDialog from "./TranslationCreateDialog";
+import BulkTranslationUpload from "@/components/BulkTranslationUpload";
 export default {
   name: "TranslationsTable",
   components: {
+    BulkTranslationUpload,
     TranslationCreateDialog,
     QuickplayItemTable
   },
@@ -51,6 +83,7 @@ export default {
       editorInitialLangValue: "",
       editorInitialValueValue: "",
       search: "",
+      showBulkUploadDialog: false,
       headers: [
         {
           text: "Key",
@@ -68,6 +101,9 @@ export default {
       this.editorInitialLangValue = "";
       this.editorInitialValueValue = "";
       this.showEditMenu = true;
+    },
+    bulkUploadButtonClicked() {
+      this.showBulkUploadDialog = !this.showBulkUploadDialog;
     },
     editItem(item) {
       this.editorInitialKeyValue = item.key || "";
@@ -102,6 +138,9 @@ export default {
 
 .plus-icon {
   font-size: 20px;
+}
+.upload-btn {
+  margin-right: 10px;
 }
 
 .new-button-wrapper {

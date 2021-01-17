@@ -23,7 +23,8 @@ import {
   faSearch,
   faChevronLeft,
   faChevronRight,
-  faLink
+  faLink,
+  faUpload
 } from "@fortawesome/pro-solid-svg-icons";
 import { faCircle, faSquare } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -44,7 +45,8 @@ library.add(
   faArrowAltDown,
   faArrowAltUp,
   faCaretDown,
-  faLink
+  faLink,
+  faUpload
 );
 
 Vue.use(VueCookie);
