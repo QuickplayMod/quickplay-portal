@@ -6,7 +6,7 @@
           alt="Quickplay Logo"
           class="shrink mr-2"
           contain
-          :src="process.env.BASE_URL + '/img/quickplay-white.png'"
+          :src="logoUrl"
           transition="scale-transition"
           width="40"
         />
@@ -102,6 +102,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    logoUrl(): string {
+      return process.env.VUE_APP_BASE_URL + "/img/quickplay-white.png";
+    },
     currentErrorMessage(): string {
       if (!this.errorMessages || !this.errorMessages.length) {
         return "";
