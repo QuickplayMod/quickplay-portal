@@ -105,9 +105,14 @@ export default {
       }
 
       try {
-        const parsedInput = JSON.parse(input);
+        let parsedInput = JSON.parse(input);
         if (!parsedInput || typeof parsedInput != "object") {
           return "The input JSON is not valid.";
+        }
+
+        // Input is also accepted with a "keys" field which contains all the translations.
+        if (parsedInput.keys && typeof parsedInput.keys == "object") {
+          parsedInput = parsedInput.keys;
         }
 
         for (const prop in parsedInput) {
@@ -162,7 +167,13 @@ export default {
     },
     submit() {
       // We inform the user of the changes they're about to make, and confirm that they want to make them.
-      const parsedInput = JSON.parse(this.formBulkInput);
+      let parsedInput = JSON.parse(this.formBulkInput);
+
+      // Input is also accepted with a "keys" field which contains all the translations.
+      if (parsedInput.keys && typeof parsedInput.keys == "object") {
+        parsedInput = parsedInput.keys;
+      }
+
       const modifiedCounts = this.getModificationCounts(
         parsedInput,
         this.formLanguage
