@@ -27,34 +27,11 @@ class AuthCompleteSubscriber extends Subscriber {
   async getLatestUsername(uuid: string): Promise<string> {
     // Should be changed to not use an external CORS bypass service, but this works fine for now...
     const res = await axios.get(`https://quickplay.bugg.co/proxy/name/${uuid}`);
-    if (res.status != 200) {
+    if (res.status != 200 || !res.data) {
       return "";
     }
 
-    interface Item {
-      name: string;
-      changedToAt: number;
-    }
-
-    let latestName: Item | null = null;
-    for (const prop in res.data) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (!res.data.hasOwnProperty(prop)) {
-        continue;
-      }
-      if (
-        !latestName ||
-        (latestName.changedToAt || 0) < res.data[prop].changedToAt
-      ) {
-        latestName = res.data[prop];
-      }
-    }
-
-    if (latestName == null) {
-      return "";
-    }
-
-    return latestName.name;
+    return res.data;
   }
 }
 

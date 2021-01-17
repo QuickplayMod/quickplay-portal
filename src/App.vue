@@ -6,7 +6,7 @@
           alt="Quickplay Logo"
           class="shrink mr-2"
           contain
-          src="/img/quickplay-white.png"
+          :src="process.env.BASE_URL + '/img/quickplay-white.png'"
           transition="scale-transition"
           width="40"
         />
