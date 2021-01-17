@@ -26,9 +26,7 @@ class AuthCompleteSubscriber extends Subscriber {
 
   async getLatestUsername(uuid: string): Promise<string> {
     // Should be changed to not use an external CORS bypass service, but this works fine for now...
-    const res = await axios.get(
-      `https://thingproxy.freeboard.io/fetch/https://api.mojang.com/user/profiles/${uuid}/names`
-    );
+    const res = await axios.get(`https://quickplay.bugg.co/proxy/name/${uuid}`);
     if (res.status != 200) {
       return "";
     }
