@@ -22,7 +22,10 @@ import {
   Screen,
   Button,
   AliasedAction,
-  PushEditHistoryEventAction, SetCurrentUserCountAction
+  PushEditHistoryEventAction,
+  SetCurrentUserCountAction,
+  SetRegexAction,
+  RemoveRegexAction
 } from "@quickplaymod/quickplay-actions-js";
 import { Buffer } from "buffer";
 import AuthCompleteSubscriber from "@/subscribers/AuthCompleteSubscriber";
@@ -43,6 +46,8 @@ import RemoveTranslationSubscriber from "@/subscribers/RemoveTranslationSubscrib
 import PushEditHistoryEventSubscriber from "@/subscribers/PushEditHistoryEventSubscriber";
 import AddUserCountHistoryAction from "@quickplaymod/quickplay-actions-js/dist/actions/clientbound/AddUserCountHistoryAction";
 import SetCurrentUserCountSubscriber from "@/subscribers/SetCurrentUserCountSubscriber";
+import SetRegexSubscriber from "@/subscribers/SetRegexSubscriber";
+import RemoveRegexSubscriber from "@/subscribers/RemoveRegexSubscriber";
 
 Vue.use(Vuex);
 
@@ -62,6 +67,7 @@ interface StateInterface {
   buttons: Record<string, Button>;
   aliasedActions: Record<string, AliasedAction>;
   translations: Record<string, Record<string, string>>;
+  regexes: Record<string, string>;
   connectionHistory: Record<number, number>;
   currentConnections: number;
   editHistory: {
@@ -85,6 +91,7 @@ const state: StateInterface = {
   buttons: {},
   aliasedActions: {},
   translations: {},
+  regexes: {},
   mcName: "",
   editHistory: {
     events: [],
@@ -128,6 +135,12 @@ const mutations = {
       Vue.set(state.translations, arg.key, {});
     }
     Vue.set(state.translations[arg.key], arg.lang, arg.value);
+  },
+  SET_REGEX(state: StateInterface, arg: { key: string; value: string }) {
+    if (!state.regexes) {
+      Vue.set(state, "regexes", {});
+    }
+    Vue.set(state.regexes, arg.key, arg.value);
   },
   PUSH_ERROR_MESSAGE(state: StateInterface, msg: string) {
     state.errorMessages.push(msg);
@@ -300,6 +313,11 @@ const actions = {
     ctx.state.actionBus?.subscribe(
       SetTranslationAction,
       new SetTranslationSubscriber()
+    );
+    ctx.state.actionBus?.subscribe(SetRegexAction, new SetRegexSubscriber());
+    ctx.state.actionBus?.subscribe(
+      RemoveRegexAction,
+      new RemoveRegexSubscriber()
     );
     ctx.state.actionBus?.subscribe(
       DisableModAction,

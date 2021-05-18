@@ -224,25 +224,4 @@ export default {
     margin-top: 15px;
   }
 }
-.available-on-checkbox {
-  margin: 0;
-  padding: 0;
-}
-.buttons-radio {
-  @media (max-width: 595px) {
-    margin-bottom: 10px;
-  }
-}
-.translation-btn {
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-.translation-text {
-  margin: 5px 0 0;
-  color: white;
-}
-.translation-key {
-  margin: 0 0 15px;
-  font-style: italic;
-}
 </style>

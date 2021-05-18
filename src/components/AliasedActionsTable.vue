@@ -3,6 +3,7 @@
     :subtable="subtable"
     :headers="headers"
     :value="value"
+    :expandable="false"
     @edit="editItem"
     @delete="deleteItem"
     @move-up="moveUpItem"

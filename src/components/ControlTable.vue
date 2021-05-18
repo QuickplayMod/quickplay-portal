@@ -26,6 +26,11 @@
           <TranslationsTable :value="translationList" />
         </VCard>
       </VTabItem>
+      <VTabItem key="regexes" value="/regexes">
+        <VCard flat>
+          <RegexesTable :value="regexList" />
+        </VCard>
+      </VTabItem>
     </VTabsItems>
   </VCard>
 </template>
@@ -35,9 +40,11 @@ import ScreensTable from "@/components/ScreensTable.vue";
 import ButtonsTable from "@/components/ButtonsTable";
 import TranslationsTable from "@/components/TranslationsTable";
 import AliasedActionsTable from "@/components/AliasedActionsTable";
+import RegexesTable from "@/components/RegexesTable";
 export default {
   name: "ControlTable",
   components: {
+    RegexesTable,
     AliasedActionsTable,
     TranslationsTable,
     ButtonsTable,
@@ -106,6 +113,19 @@ export default {
         }
       }
       return arr;
+    },
+    regexList() {
+      const arr = [];
+
+      const regexes = this.$store.state.regexes;
+      for (const regex in regexes) {
+        if (!regexes[regex]) {
+          continue;
+        }
+        arr.push({ key: regex, value: regexes[regex] });
+      }
+
+      return arr;
     }
   },
   data() {
@@ -131,6 +151,11 @@ export default {
           key: "translations",
           name: "Translations",
           route: "/translations"
+        },
+        {
+          key: "regexes",
+          name: "Regular Expressions",
+          route: "/regexes"
         }
       ]
     };

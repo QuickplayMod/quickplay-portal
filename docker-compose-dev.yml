@@ -5,7 +5,6 @@ services:
     depends_on:
       - db
       - redis
-      - socket
     ports:
       - "43515:80"
       - "5860:5860"

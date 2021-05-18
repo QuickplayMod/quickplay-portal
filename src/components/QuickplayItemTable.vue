@@ -13,7 +13,7 @@
         :items="value"
         :search="search"
         item-key="key"
-        show-expand
+        :show-expand="expandable"
         single-expand
       >
         <template v-slot:item.imageURL="{ item }">
