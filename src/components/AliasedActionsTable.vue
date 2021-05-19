@@ -104,7 +104,7 @@ export default {
       editorInitialVisibleValue: true,
       editorInitialAdminOnlyValue: false,
       editorInitialActionType: "SendChatCommandAction",
-      editorInitialActionArg: "/play ",
+      editorInitialActionArg: "play ",
       editorInitialHypixelPackageRankRegex: "",
       editorInitialHypixelRankRegex: "",
       editorInitialHypixelLocrawRegex: "",
@@ -138,7 +138,7 @@ export default {
       this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialActionType = "SendChatCommandAction";
-      this.editorInitialActionArg = "/play ";
+      this.editorInitialActionArg = "play ";
       this.editorInitialHypixelRankRegex = "";
       this.editorInitialHypixelPackageRankRegex = "";
       this.editorInitialHypixelLocrawRegex = {};

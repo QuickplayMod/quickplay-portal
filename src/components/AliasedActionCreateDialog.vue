@@ -128,6 +128,13 @@
               </VCol>
             </VRow>
           </VForm>
+          <VAlert
+            type="warning"
+            v-if="initialAliasedActionKey && formAliasedActionKey !== initialAliasedActionKey"
+          >
+            Screens and Buttons reference Aliased Actions by their key. You should
+            not change an Aliased Action's key unless you know what you are doing.
+          </VAlert>
           <div class="action-btns lower-action-btns">
             <VBtn class="cancel-btn" @click="cancelClicked">
               Cancel
@@ -185,7 +192,7 @@ export default {
     },
     initialActionArg: {
       type: String,
-      default: "/play "
+      default: "play "
     },
     initialHypixelBuildTeamAdminOnly: {
       type: Boolean,
@@ -287,7 +294,7 @@ export default {
         !this.formActionArg &&
         this.formActionType === "SendChatCommandAction"
       ) {
-        this.formActionArg = "/play ";
+        this.formActionArg = "play ";
       } else {
         this.formActionArg = "";
       }
