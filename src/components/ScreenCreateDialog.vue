@@ -60,28 +60,15 @@
             <VRow>
               <VCol>
                 <p class="subtitle-1">
-                  Available on <span class="red--text">*</span>
+                  Server IP Regex
                 </p>
-                <VCheckbox
-                  class="available-on-checkbox"
+                <p class="server-regex-note">
+                  * Select nothing for all servers
+                </p>
+                <RegexSelector
                   v-model="formSelectedServers"
-                  label="Hypixel Network"
-                  value="Hypixel Network"
-                  :rules="[validateAvailableOnServers]"
-                />
-                <VCheckbox
-                  class="available-on-checkbox"
-                  v-model="formSelectedServers"
-                  label="Hypixel Alpha Network"
-                  value="Hypixel Alpha Network"
-                  :rules="[validateAvailableOnServers]"
-                />
-                <VCheckbox
-                  class="available-on-checkbox"
-                  v-model="formSelectedServers"
-                  label="All"
-                  value="ALL"
-                  :rules="[validateAvailableOnServers]"
+                  clearable
+                  multiple
                 />
               </VCol>
               <VCol>
@@ -188,9 +175,11 @@ import TranslationSelector from "@/components/TranslationSelector";
 import ButtonsTable from "@/components/ButtonsTable";
 import AliasedActionsTable from "@/components/AliasedActionsTable";
 import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
+import RegexSelector from "@/components/RegexSelector";
 export default {
   name: "ScreenCreateDialog",
   components: {
+    RegexSelector,
     HypixelPermissionsEditor,
     AliasedActionsTable,
     ButtonsTable,
@@ -211,7 +200,7 @@ export default {
     },
     initialSelectedServers: {
       type: Array,
-      default: () => ["Hypixel Network", "Hypixel Alpha Network"]
+      default: () => ["serverHypixel", "serverHypixelAlpha"]
     },
     initialVisible: {
       type: Boolean,
@@ -267,13 +256,13 @@ export default {
       showHypixelEditor: false,
       formScreenKey: this.initialScreenKey,
       formScreenType: this.initialScreenType,
-      formSelectedServers: this.initialSelectedServers,
+      formSelectedServers: [...this.initialSelectedServers],
       formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formImageUrl: this.initialImageUrl,
       formTranslationKey: this.initialTranslationKey,
-      formButtonList: this.initialButtonList,
-      formAliasedActionList: this.initialAliasedActionList,
+      formButtonList: [...this.initialButtonList],
+      formAliasedActionList: [...this.initialAliasedActionList],
       formHypixelBuildTeamAdminOnly: this.initialHypixelBuildTeamAdminOnly,
       formHypixelBuildTeamOnly: this.initialHypixelBuildTeamOnly,
       formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
@@ -368,28 +357,19 @@ export default {
       }
       return true;
     },
-    validateAvailableOnServers(value) {
-      if (!value || !value.length) {
-        return "You must select at least one option.";
-      }
-      if (value.includes("ALL") && value.length > 1) {
-        return 'You cannot select both "All" and another option.';
-      }
-      return true;
-    },
     cancelClicked() {
       this.localValue = false;
     },
     reset() {
       this.formScreenKey = this.initialScreenKey;
       this.formScreenType = this.initialScreenType;
-      this.formSelectedServers = this.initialSelectedServers;
+      this.formSelectedServers = [...this.initialSelectedServers];
       this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
       this.formImageUrl = this.initialImageUrl;
       this.formTranslationKey = this.initialTranslationKey;
-      this.formButtonList = this.initialButtonList;
-      this.formAliasedActionList = this.initialAliasedActionList;
+      this.formButtonList = [...this.initialButtonList];
+      this.formAliasedActionList = [...this.initialAliasedActionList];
       this.formHypixelBuildTeamAdminOnly = this.initialHypixelBuildTeamAdminOnly;
       this.formHypixelBuildTeamOnly = this.initialHypixelBuildTeamOnly;
       this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
@@ -464,5 +444,8 @@ export default {
 .translation-key {
   margin: 0 0 15px;
   font-style: italic;
+}
+.server-regex-note {
+  margin: 0;
 }
 </style>

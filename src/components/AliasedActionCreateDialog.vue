@@ -40,28 +40,15 @@
             <VRow>
               <VCol>
                 <p class="subtitle-1">
-                  Available on <span class="red--text">*</span>
+                  Server IP Regex
                 </p>
-                <VCheckbox
-                  class="available-on-checkbox"
-                  v-model="formSelectedServers"
-                  label="Hypixel Network"
-                  value="Hypixel Network"
-                  :rules="[validateAvailableOnServers]"
-                />
-                <VCheckbox
-                  class="available-on-checkbox"
-                  v-model="formSelectedServers"
-                  label="Hypixel Alpha Network"
-                  value="Hypixel Alpha Network"
-                  :rules="[validateAvailableOnServers]"
-                />
-                <VCheckbox
-                  class="available-on-checkbox"
-                  v-model="formSelectedServers"
-                  label="All"
-                  value="ALL"
-                  :rules="[validateAvailableOnServers]"
+                <p class="server-regex-note">
+                  * Select nothing for all servers
+                </p>
+                <RegexSelector
+                    v-model="formSelectedServers"
+                    clearable
+                    multiple
                 />
               </VCol>
               <VCol>
@@ -155,9 +142,11 @@ import {
   SendChatCommandAction
 } from "@quickplaymod/quickplay-actions-js";
 import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
+import RegexSelector from "@/components/RegexSelector";
+
 export default {
   name: "AliasedActionCreateDialog",
-  components: { HypixelPermissionsEditor },
+  components: { RegexSelector, HypixelPermissionsEditor },
   props: {
     value: {
       type: Boolean,
@@ -169,7 +158,7 @@ export default {
     },
     initialSelectedServers: {
       type: Array,
-      default: () => ["Hypixel Network", "Hypixel Alpha Network"]
+      default: () => ["serverHypixel", "serverHypixelAlpha"]
     },
     initialVisible: {
       type: Boolean,
@@ -215,7 +204,7 @@ export default {
       formValid: false,
       showHypixelEditor: false,
       formAliasedActionKey: this.initialAliasedActionKey,
-      formSelectedServers: this.initialSelectedServers,
+      formSelectedServers: [...this.initialSelectedServers],
       formVisible: this.initialVisible,
       formAdminOnly: this.initialAdminOnly,
       formActionType: this.initialActionType,
@@ -307,15 +296,6 @@ export default {
       }
       return true;
     },
-    validateAvailableOnServers(value) {
-      if (!value || !value.length) {
-        return "You must select at least one option.";
-      }
-      if (value.includes("ALL") && value.length > 1) {
-        return 'You cannot select both "All" and another option.';
-      }
-      return true;
-    },
     validateActionType(value) {
       if (!value) {
         return "You must select an action type.";
@@ -350,7 +330,7 @@ export default {
     },
     reset() {
       this.formAliasedActionKey = this.initialAliasedActionKey;
-      this.formSelectedServers = this.initialSelectedServers;
+      this.formSelectedServers = [...this.initialSelectedServers];
       this.formVisible = this.initialVisible;
       this.formAdminOnly = this.initialAdminOnly;
       this.formActionType = this.initialActionType;
@@ -408,5 +388,8 @@ export default {
   @media (max-width: 595px) {
     margin-bottom: 10px;
   }
+}
+.server-regex-note {
+  margin: 0;
 }
 </style>

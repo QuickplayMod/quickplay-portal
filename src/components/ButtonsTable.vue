@@ -182,8 +182,8 @@ export default {
     newItemButtonClicked() {
       this.editorInitialKeyValue = "";
       this.editorInitialSelectedServersValue = [
-        "Hypixel Network",
-        "Hypixel Alpha Network"
+        "serverHypixel",
+        "serverHypixelAlpha"
       ];
       this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
