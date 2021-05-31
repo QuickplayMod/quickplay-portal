@@ -181,10 +181,7 @@ export default {
     },
     newItemButtonClicked() {
       this.editorInitialKeyValue = "";
-      this.editorInitialSelectedServersValue = [
-        "serverHypixel",
-        "serverHypixelAlpha"
-      ];
+      this.editorInitialSelectedServersValue = ["serverHypixel"];
       this.editorInitialVisibleValue = true;
       this.editorInitialAdminOnlyValue = false;
       this.editorInitialVisibleInPartyMode = true;

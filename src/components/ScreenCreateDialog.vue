@@ -200,7 +200,7 @@ export default {
     },
     initialSelectedServers: {
       type: Array,
-      default: () => ["serverHypixel", "serverHypixelAlpha"]
+      default: () => ["serverHypixel"]
     },
     initialVisible: {
       type: Boolean,
