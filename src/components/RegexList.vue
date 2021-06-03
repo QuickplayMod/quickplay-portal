@@ -48,7 +48,7 @@ export default {
       required: true
     },
     selectedValues: {
-      type: Array,
+      type: [Array, String],
       default: () => []
     }
   },

@@ -1,6 +1,5 @@
-import { Action, Subscriber } from "@quickplaymod/quickplay-actions-js";
+import { Action, Subscriber, Screen } from "@quickplaymod/quickplay-actions-js";
 import store from "../store/index";
-import Screen from "@quickplaymod/quickplay-actions-js/dist/Screen";
 
 class SetScreenSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
@@ -21,6 +20,7 @@ class SetScreenSubscriber extends Subscriber {
     screen.hypixelBuildTeamOnly = action.getPayloadObject(12).readUInt8(0) != 0;
     screen.hypixelBuildTeamAdminOnly =
       action.getPayloadObject(13).readUInt8(0) != 0;
+    screen.settingsRegexes = JSON.parse(action.getPayloadObjectAsString(14));
     store.commit("SET_SCREEN", { key: screen.key, value: screen });
   }
 }

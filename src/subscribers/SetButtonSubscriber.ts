@@ -1,6 +1,5 @@
-import { Action, Subscriber } from "@quickplaymod/quickplay-actions-js";
+import { Action, Subscriber, Button } from "@quickplaymod/quickplay-actions-js";
 import store from "../store/index";
-import Button from "@quickplaymod/quickplay-actions-js/dist/Button";
 
 class SetButtonSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
@@ -19,6 +18,7 @@ class SetButtonSubscriber extends Subscriber {
       action.getPayloadObject(11).readUInt8(0) != 0;
     button.visibleInPartyMode = action.getPayloadObject(12).readUInt8(0) != 0;
     button.partyModeScopeTranslationKey = action.getPayloadObjectAsString(13);
+    button.settingsRegexes = JSON.parse(action.getPayloadObjectAsString(14));
     store.commit("SET_BUTTON", { key: button.key, value: button });
   }
 }

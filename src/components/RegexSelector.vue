@@ -80,7 +80,7 @@ export default {
       default: false
     },
     value: {
-      type: Array,
+      type: [Array, String],
       required: true
     }
   },

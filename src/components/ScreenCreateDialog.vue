@@ -115,6 +115,12 @@
               </VCol>
             </VRow>
             <VRow>
+              <SettingsRegexesSelector
+                v-model="formSettingsRegexes"
+                :rules="[validateSettingsRegexes]"
+              />
+            </VRow>
+            <VRow>
               <VCol>
                 <VCard elevation="8">
                   <VTabs v-model="tab">
@@ -176,9 +182,11 @@ import ButtonsTable from "@/components/ButtonsTable";
 import AliasedActionsTable from "@/components/AliasedActionsTable";
 import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
 import RegexSelector from "@/components/RegexSelector";
+import SettingsRegexesSelector from "@/components/SettingsRegexesSelector";
 export default {
   name: "ScreenCreateDialog",
   components: {
+    SettingsRegexesSelector,
     RegexSelector,
     HypixelPermissionsEditor,
     AliasedActionsTable,
@@ -247,6 +255,12 @@ export default {
     initialHypixelRankRegex: {
       type: String,
       default: ""
+    },
+    initialSettingsRegexes: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -268,6 +282,7 @@ export default {
       formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
       formHypixelPackageRankRegex: this.initialHypixelPackageRankRegex,
       formHypixelRankRegex: this.initialHypixelRankRegex,
+      formSettingsRegexes: this.initialSettingsRegexes,
       tab: ""
     };
   },
@@ -351,6 +366,18 @@ export default {
       }
       return true;
     },
+    validateSettingsRegexes(value) {
+      for (const key in value) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!value.hasOwnProperty(key)) {
+          continue;
+        }
+        if (!value[key]) {
+          return "You must choose a regular expression for all settings!";
+        }
+      }
+      return true;
+    },
     validateScreenType(value) {
       if (value !== "BUTTONS" && value !== "IMAGES") {
         return 'You must select either "BUTTONS" or "IMAGES".';
@@ -375,6 +402,7 @@ export default {
       this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
       this.formHypixelPackageRankRegex = this.initialHypixelPackageRankRegex;
       this.formHypixelRankRegex = this.initialHypixelRankRegex;
+      this.formSettingsRegexes = this.initialSettingsRegexes;
     },
     async submit() {
       const currentScreen = this.$store.state.screens[this.formScreenKey];
@@ -403,6 +431,7 @@ export default {
       screen.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
       screen.hypixelRankRegex = this.formHypixelRankRegex;
       screen.hypixelLocrawRegex = this.formHypixelLocrawRegex;
+      screen.settingsRegexes = this.formSettingsRegexes;
       const action = new AlterScreenAction(this.formScreenKey, screen);
       await this.$store.dispatch("sendAction", {
         action: action

@@ -1,10 +1,10 @@
 import {
   Action,
   Resolver,
-  Subscriber
+  Subscriber,
+  AliasedAction
 } from "@quickplaymod/quickplay-actions-js";
 import store from "../store/index";
-import AliasedAction from "@quickplaymod/quickplay-actions-js/dist/AliasedAction";
 
 class SetAliasedActionSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
@@ -22,6 +22,9 @@ class SetAliasedActionSubscriber extends Subscriber {
       action.getPayloadObject(8).readUInt8(0) != 0;
     aliasedAction.hypixelBuildTeamAdminOnly =
       action.getPayloadObject(9).readUInt8(0) != 0;
+    aliasedAction.settingsRegexes = JSON.parse(
+      action.getPayloadObjectAsString(10)
+    );
     store.commit("SET_ALIASED_ACTION", {
       key: aliasedAction.key,
       value: aliasedAction
