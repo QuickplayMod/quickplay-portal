@@ -111,6 +111,12 @@
               </VCol>
             </VRow>
             <VRow>
+              <SettingsRegexesSelector
+                v-model="formSettingsRegexes"
+                :rules="[validateSettingsRegexes]"
+              />
+            </VRow>
+            <VRow>
               <VCol>
                 <p class="subtitle-1">
                   Aliased Actions
@@ -157,6 +163,7 @@ import TranslationSelector from "@/components/TranslationSelector";
 import AliasedActionsTable from "@/components/AliasedActionsTable";
 import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
 import RegexSelector from "@/components/RegexSelector";
+import SettingsRegexesSelector from "@/components/SettingsRegexesSelector";
 
 export default {
   name: "ButtonCreateDialog",
@@ -164,7 +171,8 @@ export default {
     RegexSelector,
     HypixelPermissionsEditor,
     AliasedActionsTable,
-    TranslationSelector
+    TranslationSelector,
+    SettingsRegexesSelector
   },
   props: {
     value: {
@@ -228,6 +236,12 @@ export default {
     initialHypixelRankRegex: {
       type: String,
       default: ""
+    },
+    initialSettingsRegexes: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -248,7 +262,8 @@ export default {
       formHypixelBuildTeamOnly: this.initialHypixelBuildTeamOnly,
       formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
       formHypixelPackageRankRegex: this.initialHypixelPackageRankRegex,
-      formHypixelRankRegex: this.initialHypixelRankRegex
+      formHypixelRankRegex: this.initialHypixelRankRegex,
+      formSettingsRegexes: this.initialSettingsRegexes
     };
   },
   computed: {
@@ -315,6 +330,18 @@ export default {
       }
       return true;
     },
+    validateSettingsRegexes(value) {
+      for (const key in value) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!value.hasOwnProperty(key)) {
+          continue;
+        }
+        if (!value[key]) {
+          return "You must choose a regular expression for all settings!";
+        }
+      }
+      return true;
+    },
     cancelClicked() {
       this.localValue = false;
     },
@@ -333,6 +360,7 @@ export default {
       this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
       this.formHypixelPackageRankRegex = this.initialHypixelPackageRankRegex;
       this.formHypixelRankRegex = this.initialHypixelRankRegex;
+      this.formSettingsRegexes = this.initialSettingsRegexes;
     },
     async submit() {
       const currentButton = this.$store.state.buttons[this.formButtonKey];
@@ -362,6 +390,7 @@ export default {
       button.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
       button.hypixelRankRegex = this.formHypixelRankRegex;
       button.hypixelLocrawRegex = this.formHypixelLocrawRegex;
+      button.settingsRegexes = this.formSettingsRegexes;
       const action = new AlterButtonAction(this.formButtonKey, button);
       await this.$store.dispatch("sendAction", {
         action: action

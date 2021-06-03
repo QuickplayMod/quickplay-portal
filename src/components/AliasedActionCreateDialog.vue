@@ -46,9 +46,9 @@
                   * Select nothing for all servers
                 </p>
                 <RegexSelector
-                    v-model="formSelectedServers"
-                    clearable
-                    multiple
+                  v-model="formSelectedServers"
+                  clearable
+                  multiple
                 />
               </VCol>
               <VCol>
@@ -114,6 +114,12 @@
                 </VTextField>
               </VCol>
             </VRow>
+            <VRow>
+              <SettingsRegexesSelector
+                v-model="formSettingsRegexes"
+                :rules="[validateSettingsRegexes]"
+              />
+            </VRow>
           </VForm>
           <div class="action-btns lower-action-btns">
             <VBtn class="cancel-btn" @click="cancelClicked">
@@ -143,10 +149,15 @@ import {
 } from "@quickplaymod/quickplay-actions-js";
 import HypixelPermissionsEditor from "@/components/HypixelPermissionsEditor";
 import RegexSelector from "@/components/RegexSelector";
+import SettingsRegexesSelector from "@/components/SettingsRegexesSelector";
 
 export default {
   name: "AliasedActionCreateDialog",
-  components: { RegexSelector, HypixelPermissionsEditor },
+  components: {
+    RegexSelector,
+    HypixelPermissionsEditor,
+    SettingsRegexesSelector
+  },
   props: {
     value: {
       type: Boolean,
@@ -197,6 +208,12 @@ export default {
     initialHypixelRankRegex: {
       type: String,
       default: ""
+    },
+    initialSettingsRegexes: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -214,6 +231,7 @@ export default {
       formHypixelLocrawRegex: this.initialHypixelLocrawRegex,
       formHypixelPackageRankRegex: this.initialHypixelPackageRankRegex,
       formHypixelRankRegex: this.initialHypixelRankRegex,
+      formSettingsRegexes: this.initialSettingsRegexes,
       actionsAvailable: ["OpenScreenAction", "SendChatCommandAction"],
       blockedCommands: [
         "me",
@@ -325,6 +343,18 @@ export default {
       }
       return true;
     },
+    validateSettingsRegexes(value) {
+      for (const key in value) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!value.hasOwnProperty(key)) {
+          continue;
+        }
+        if (!value[key]) {
+          return "You must choose a regular expression for all settings!";
+        }
+      }
+      return true;
+    },
     cancelClicked() {
       this.localValue = false;
     },
@@ -340,6 +370,7 @@ export default {
       this.formHypixelLocrawRegex = this.initialHypixelLocrawRegex;
       this.formHypixelPackageRankRegex = this.initialHypixelPackageRankRegex;
       this.formHypixelRankRegex = this.initialHypixelRankRegex;
+      this.formSettingsRegexes = this.initialSettingsRegexes;
     },
     submit() {
       const aliasedAction = new AliasedAction(this.formAliasedActionKey);
@@ -356,6 +387,7 @@ export default {
       aliasedAction.hypixelPackageRankRegex = this.formHypixelPackageRankRegex;
       aliasedAction.hypixelRankRegex = this.formHypixelRankRegex;
       aliasedAction.hypixelLocrawRegex = this.formHypixelLocrawRegex;
+      aliasedAction.settingsRegexes = this.formSettingsRegexes;
       const action = new AlterAliasedActionAction(
         this.formAliasedActionKey,
         aliasedAction

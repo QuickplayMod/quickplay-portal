@@ -68,6 +68,7 @@
           editorInitialHypixelPackageRankRegex
         "
         :initial-hypixel-rank-regex="editorInitialHypixelRankRegex"
+        :initial-settings-regexes="editorInitialSettingsRegexes"
       />
     </template>
   </QuickplayItemTable>
@@ -110,6 +111,7 @@ export default {
       editorInitialHypixelLocrawRegex: "",
       editorInitialHypixelBuildTeamOnly: false,
       editorInitialHypixelBuildTeamAdminOnly: false,
+      editorInitialSettingsRegexes: {},
       headers: [
         {
           text: "Aliased Action Key",
@@ -141,6 +143,7 @@ export default {
       this.editorInitialHypixelLocrawRegex = {};
       this.editorInitialHypixelBuildTeamOnly = false;
       this.editorInitialHypixelBuildTeamAdminOnly = false;
+      this.editorInitialSettingsRegexes = {};
       this.showEditMenu = true;
     },
     moveUpItem(item) {
@@ -172,6 +175,7 @@ export default {
       this.editorInitialHypixelPackageRankRegex =
         item.hypixelPackageRankRegex || "";
       this.editorInitialHypixelRankRegex = item.hypixelRankRegex || "";
+      this.editorInitialSettingsRegexes = item.settingsRegexes || {};
       this.editorInitialActionType =
         item.action.id === 11 ? "OpenScreenAction" : "SendChatCommandAction";
       this.editorInitialActionArg = item.action.getPayloadObjectAsString(0);

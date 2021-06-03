@@ -72,6 +72,7 @@
           editorInitialHypixelPackageRankRegex
         "
         :initial-hypixel-rank-regex="editorInitialHypixelRankRegex"
+        :initial-settings-regexes="editorInitialSettingsRegexes"
       />
     </template>
     <template v-slot:expandable="{ item }">
@@ -130,6 +131,7 @@ export default {
       editorInitialHypixelLocrawRegex: {},
       editorInitialHypixelBuildTeamOnly: false,
       editorInitialHypixelBuildTeamAdminOnly: false,
+      editorInitialSettingsRegexes: {},
       headers: [
         {
           text: "Button Key",
@@ -194,6 +196,7 @@ export default {
       this.editorInitialHypixelLocrawRegex = {};
       this.editorInitialHypixelBuildTeamOnly = false;
       this.editorInitialHypixelBuildTeamAdminOnly = false;
+      this.editorInitialSettingsRegexes = {};
       this.showEditMenu = true;
     },
     moveUpItem(item) {
@@ -231,6 +234,7 @@ export default {
       this.editorInitialHypixelPackageRankRegex =
         item.hypixelPackageRankRegex || "";
       this.editorInitialHypixelRankRegex = item.hypixelRankRegex || "";
+      this.editorInitialSettingsRegexes = item.settingsRegexes || {};
       this.showEditMenu = true;
     },
     deleteItem(item) {
