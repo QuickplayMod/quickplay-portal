@@ -32,7 +32,7 @@
         >
           Log out
         </VBtn>
-        <VBtn text v-else @click="init">
+        <VBtn text v-else-if="!$store.state.loggedOut" @click="init">
           Log in
         </VBtn>
         <VBtn text v-if="$store.state.loggedIn">
@@ -44,6 +44,10 @@
     <VMain class="main-body">
       <VContainer>
         <Loading class="loader" v-if="$store.state.loading" />
+        <LoggedOut
+          class="login-failed"
+          v-else-if="$store.state.loggedOut && !$store.state.loggedIn"
+        />
         <LoginFailed
           class="login-failed"
           v-else-if="$store.state.loginFailed"
@@ -73,6 +77,7 @@ import LoginFailed from "@/components/LoginFailed.vue";
 import NoPermission from "@/components/NoPermission.vue";
 import { mapState } from "vuex";
 import EditLog from "@/components/EditLog.vue";
+import LoggedOut from "@/components/LoggedOut.vue";
 
 export default Vue.extend({
   name: "App",
@@ -84,6 +89,7 @@ export default Vue.extend({
     };
   },
   components: {
+    LoggedOut,
     EditLog,
     NoPermission,
     LoginFailed,
@@ -115,6 +121,10 @@ export default Vue.extend({
   },
   methods: {
     async init() {
+      if (this.$route.query.code) {
+        console.log(this.$route.query.code);
+        return;
+      }
       await this.$store.dispatch("initialize");
     },
     showErrorMessage() {

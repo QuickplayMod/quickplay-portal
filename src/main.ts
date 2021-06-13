@@ -5,7 +5,6 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import { LoaderPlugin } from "vue-google-login";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -50,10 +49,6 @@ library.add(
 );
 
 Vue.use(VueCookie);
-Vue.use(LoaderPlugin, {
-  // eslint-disable-next-line @typescript-eslint/camelcase
-  client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID
-});
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("FontAwesomeIcon", FontAwesomeIcon);
 

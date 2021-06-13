@@ -9,7 +9,14 @@ class AuthCompleteSubscriber extends Subscriber {
     store.commit("SET_LOGGED_IN", true);
     Vue.$cookies.set(
       process.env.VUE_APP_SESSION_COOKIE,
-      action.getPayloadObjectAsString(0)
+      action.getPayloadObjectAsString(0),
+      process.env.VUE_APP_SESSION_LENGTH || "3h"
+    );
+    // Used during reestablishment of connections
+    Vue.$cookies.set(
+      process.env.VUE_APP_DISCORD_ID_COOKIE,
+      action.getPayloadObjectAsString(3),
+      process.env.VUE_APP_SESSION_LENGTH || "3h"
     );
 
     const isAdmin = !!action.getPayloadObject(5).readUInt8(0);

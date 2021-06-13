@@ -48,6 +48,7 @@ import AddUserCountHistoryAction from "@quickplaymod/quickplay-actions-js/dist/a
 import SetCurrentUserCountSubscriber from "@/subscribers/SetCurrentUserCountSubscriber";
 import SetRegexSubscriber from "@/subscribers/SetRegexSubscriber";
 import RemoveRegexSubscriber from "@/subscribers/RemoveRegexSubscriber";
+import { IdentifierTypes } from "@quickplaymod/quickplay-actions-js/dist/actions/serverbound/InitializeClientAction";
 
 Vue.use(Vuex);
 
@@ -55,11 +56,12 @@ interface StateInterface {
   actionBus?: ActionBus;
   socket?: WebSocket;
   loggedIn: boolean;
+  loggedOut: boolean;
   isAdmin: boolean;
   loading: boolean;
   loginFailed: boolean;
-  googleId?: string;
-  googleJwt?: string;
+  discordId?: string;
+  discordHandshakeSecret?: string;
   mcName?: string;
   mcUuid?: string;
   errorMessages: string[];
@@ -84,6 +86,7 @@ interface StoreContext {
 const state: StateInterface = {
   loginFailed: false,
   loggedIn: false,
+  loggedOut: false,
   isAdmin: false,
   loading: true,
   errorMessages: [],
@@ -170,6 +173,9 @@ const mutations = {
   SET_LOGGED_IN(state: StateInterface, loggedIn: boolean) {
     state.loggedIn = loggedIn;
   },
+  SET_LOGGED_OUT(state: StateInterface, loggedOut: boolean) {
+    state.loggedOut = loggedOut;
+  },
   SET_IS_ADMIN(state: StateInterface, isAdmin: boolean) {
     state.isAdmin = isAdmin;
   },
@@ -179,11 +185,11 @@ const mutations = {
   SET_MC_UUID(state: StateInterface, mcUuid: string) {
     state.mcUuid = mcUuid;
   },
-  SET_GOOGLE_ID(state: StateInterface, id: string) {
-    state.googleId = id;
+  SET_DISCORD_ID(state: StateInterface, id: string) {
+    state.discordId = id;
   },
-  SET_GOOGLE_JWT(state: StateInterface, jwt: string) {
-    state.googleJwt = jwt;
+  SET_DISCORD_HANDSHAKE_SECRET(state: StateInterface, secret: string) {
+    state.discordHandshakeSecret = secret;
   },
   SET_LOGIN_FAILED(state: StateInterface, loginFailed: boolean) {
     state.loginFailed = loginFailed;
@@ -216,57 +222,32 @@ const mutations = {
 };
 const actions = {
   async logout(ctx: StoreContext) {
-    const auth2 = await (Vue as any).GoogleAuth;
-    await auth2.signOut();
     Vue.$cookies.remove(process.env.VUE_APP_SESSION_COOKIE);
-    Vue.$cookies.remove(process.env.VUE_APP_GOOGLE_ACCOUNT_COOKIE);
     ctx.commit("SET_LOADING", false);
     ctx.commit("SET_LOGGED_IN", false);
+    ctx.commit("SET_LOGGED_OUT", true);
     ctx.state.socket?.close();
   },
   async initialize(ctx: StoreContext) {
     ctx.commit("SET_LOADING", true);
-    const auth2 = await (Vue as any).GoogleAuth;
-    const accIdCookie = Vue.$cookies.get(
-      process.env.VUE_APP_GOOGLE_ACCOUNT_COOKIE
-    );
-    // If the Google account ID is cached (i.e. has signed in in past 3 hours), use the cached cookie as the login ID.
-    if (accIdCookie) {
-      ctx.commit("SET_GOOGLE_ID", accIdCookie);
-    } else {
-      // Otherwise, sign out (in case user was signed in) and attempt to sign into Google.
-      await auth2.signOut();
-      try {
-        const res = await auth2.signIn();
-        Vue.$cookies.set(
-          process.env.VUE_APP_GOOGLE_ACCOUNT_COOKIE,
-          res.getBasicProfile().getId(),
-          "3h"
-        );
-        ctx.commit("SET_GOOGLE_ID", res.getBasicProfile().getId());
-        ctx.commit("SET_GOOGLE_JWT", res.getAuthResponse().id_token);
-      } catch (e) {
-        console.error(e);
-        ctx.commit("SET_LOADING", false);
-        ctx.commit("SET_LOGGED_IN", false);
-        ctx.commit("SET_LOGIN_FAILED", true);
-        return;
-      }
-    }
-
     await ctx.dispatch("createSocket");
     await ctx.dispatch("sendInitializeClientAction");
   },
   async sendInitializeClientAction(ctx: StoreContext) {
+    const idCookie = Vue.$cookies.get(process.env.VUE_APP_DISCORD_ID_COOKIE);
+    // Discord does not return client ID until client is fully authenticated w/ application secret.
+    // If cached from prev. connection we'll use that so we can reestablish that prev. connection. Otherwise
+    // it's left blank for now.
+    const discordId = idCookie || "";
     ctx.dispatch("sendAction", {
       action: new InitializeClientAction(
-        ctx.state.googleId,
-        "GOOGLE",
+        discordId,
+        IdentifierTypes.DISCORD,
         "Quickplay Portal",
-        process.env.VUE_APP_PORTAL_VERSION,
+        process.env.VUE_APP_QUICKPLAY_COMPLIANT_VERSION,
         "en_us",
         "",
-        ""
+        process.env.VUE_APP_PORTAL_VERSION
       )
     });
   },

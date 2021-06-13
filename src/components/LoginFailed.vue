@@ -2,7 +2,7 @@
   <div>
     <h1>Login failed!</h1>
     <h3>
-      To log in, please try refreshing the page. Make sure pop-ups are enabled
+      To log in, please try refreshing the page. You may need to enable pop-ups
       in your browser.
     </h3>
     <h3>If you believe this is an error, contact an administrator.</h3>
