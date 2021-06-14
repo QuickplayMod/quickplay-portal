@@ -60,8 +60,7 @@ interface StateInterface {
   isAdmin: boolean;
   loading: boolean;
   loginFailed: boolean;
-  discordId?: string;
-  discordHandshakeSecret?: string;
+  unlinkedDiscord?: boolean;
   mcName?: string;
   mcUuid?: string;
   errorMessages: string[];
@@ -185,11 +184,8 @@ const mutations = {
   SET_MC_UUID(state: StateInterface, mcUuid: string) {
     state.mcUuid = mcUuid;
   },
-  SET_DISCORD_ID(state: StateInterface, id: string) {
-    state.discordId = id;
-  },
-  SET_DISCORD_HANDSHAKE_SECRET(state: StateInterface, secret: string) {
-    state.discordHandshakeSecret = secret;
+  SET_UNLINKED_DISCORD(state: StateInterface, isDiscordUnlinked: boolean) {
+    state.unlinkedDiscord = isDiscordUnlinked;
   },
   SET_LOGIN_FAILED(state: StateInterface, loginFailed: boolean) {
     state.loginFailed = loginFailed;

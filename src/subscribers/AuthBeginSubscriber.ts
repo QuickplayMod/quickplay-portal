@@ -9,6 +9,14 @@ import store from "../store/index";
 
 class AuthBeginSubscriber extends Subscriber {
   async run(action: Action): Promise<void> {
+    // If the user's not logged in, let's tell them we're re-authenticating. Otherwise they can just
+    // continue about their business, and we shouldn't interrupt whatever they're doing.
+    if (store.state.loginFailed) {
+      store.commit("SET_LOADING", true);
+      store.commit("SET_LOGGED_IN", false);
+      store.commit("SET_LOGIN_FAILED", false);
+    }
+
     const sessCookie = Vue.$cookies.get(process.env.VUE_APP_SESSION_COOKIE);
     const idCookie = Vue.$cookies.get(process.env.VUE_APP_DISCORD_ID_COOKIE);
     // If ID is cookie is set, we assume that the cached ID was sent in the InitializeClientAction.

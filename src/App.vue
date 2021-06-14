@@ -48,6 +48,10 @@
           class="login-failed"
           v-else-if="$store.state.loggedOut && !$store.state.loggedIn"
         />
+        <LinkDiscordForm
+          class="login-failed"
+          v-else-if="!$store.state.loggedIn && $store.state.unlinkedDiscord"
+        />
         <LoginFailed
           class="login-failed"
           v-else-if="$store.state.loginFailed"
@@ -78,6 +82,7 @@ import NoPermission from "@/components/NoPermission.vue";
 import { mapState } from "vuex";
 import EditLog from "@/components/EditLog.vue";
 import LoggedOut from "@/components/LoggedOut.vue";
+import LinkDiscordForm from "@/components/LinkDiscordForm.vue";
 
 export default Vue.extend({
   name: "App",
@@ -89,6 +94,7 @@ export default Vue.extend({
     };
   },
   components: {
+    LinkDiscordForm,
     LoggedOut,
     EditLog,
     NoPermission,
