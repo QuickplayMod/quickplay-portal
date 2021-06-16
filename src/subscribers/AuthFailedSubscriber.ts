@@ -14,7 +14,8 @@ class AuthFailedSubscriber extends Subscriber {
       console.log(
         "Authentication failed. Removed cookies and re-attempting authentication."
       );
-      await store.dispatch("initialize");
+      // await store.dispatch("initialize");
+      await store.dispatch("login");
     } else {
       console.log(
         "Authentication failed. Reason: " + action.getPayloadObjectAsString(0)

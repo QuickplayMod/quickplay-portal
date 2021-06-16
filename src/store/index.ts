@@ -56,7 +56,7 @@ interface StateInterface {
   actionBus?: ActionBus;
   socket?: WebSocket;
   loggedIn: boolean;
-  loggedOut: boolean;
+  logoutMessage: boolean;
   isAdmin: boolean;
   loading: boolean;
   loginFailed: boolean;
@@ -85,7 +85,7 @@ interface StoreContext {
 const state: StateInterface = {
   loginFailed: false,
   loggedIn: false,
-  loggedOut: false,
+  logoutMessage: false,
   isAdmin: false,
   loading: true,
   errorMessages: [],
@@ -172,8 +172,8 @@ const mutations = {
   SET_LOGGED_IN(state: StateInterface, loggedIn: boolean) {
     state.loggedIn = loggedIn;
   },
-  SET_LOGGED_OUT(state: StateInterface, loggedOut: boolean) {
-    state.loggedOut = loggedOut;
+  SHOW_LOGOUT_MESSAGE(state: StateInterface, logoutMessage: boolean) {
+    state.logoutMessage = logoutMessage;
   },
   SET_IS_ADMIN(state: StateInterface, isAdmin: boolean) {
     state.isAdmin = isAdmin;
@@ -219,25 +219,23 @@ const mutations = {
 const actions = {
   async logout(ctx: StoreContext) {
     Vue.$cookies.remove(process.env.VUE_APP_SESSION_COOKIE);
+    Vue.$cookies.remove(process.env.VUE_APP_DISCORD_ID_COOKIE);
     ctx.commit("SET_LOADING", false);
     ctx.commit("SET_LOGGED_IN", false);
-    ctx.commit("SET_LOGGED_OUT", true);
-    ctx.state.socket?.close();
+    ctx.commit("SHOW_LOGOUT_MESSAGE", true);
+    ctx.dispatch("initialize");
   },
   async initialize(ctx: StoreContext) {
     ctx.commit("SET_LOADING", true);
     await ctx.dispatch("createSocket");
+    ctx.commit("SET_LOGGED_IN", false);
+    ctx.commit("SET_LOGIN_FAILED", false);
     await ctx.dispatch("sendInitializeClientAction");
   },
-  async sendInitializeClientAction(ctx: StoreContext) {
-    const idCookie = Vue.$cookies.get(process.env.VUE_APP_DISCORD_ID_COOKIE);
-    // Discord does not return client ID until client is fully authenticated w/ application secret.
-    // If cached from prev. connection we'll use that so we can reestablish that prev. connection. Otherwise
-    // it's left blank for now.
-    const discordId = idCookie || "";
+  async login(ctx: StoreContext) {
     ctx.dispatch("sendAction", {
       action: new InitializeClientAction(
-        discordId,
+        Vue.$cookies.get(process.env.VUE_APP_DISCORD_ID_COOKIE) || "",
         IdentifierTypes.DISCORD,
         "Quickplay Portal",
         process.env.VUE_APP_QUICKPLAY_COMPLIANT_VERSION,
@@ -246,6 +244,29 @@ const actions = {
         process.env.VUE_APP_PORTAL_VERSION
       )
     });
+  },
+  async sendInitializeClientAction(ctx: StoreContext) {
+    const sessCookie = Vue.$cookies.get(process.env.VUE_APP_SESSION_COOKIE);
+    const idCookie = Vue.$cookies.get(process.env.VUE_APP_DISCORD_ID_COOKIE);
+
+    // If both session and Discord ID are cached, we can login on initialization using reauthentication.
+    // Otherwise, assume the user is logged out.
+    if (sessCookie && idCookie) {
+      ctx.dispatch("login");
+    } else {
+      ctx.commit("SET_LOADING", false);
+      ctx.dispatch("sendAction", {
+        action: new InitializeClientAction(
+          "",
+          IdentifierTypes.ANONYMOUS,
+          "Quickplay Portal",
+          process.env.VUE_APP_QUICKPLAY_COMPLIANT_VERSION,
+          "en_us",
+          "",
+          process.env.VUE_APP_PORTAL_VERSION
+        )
+      });
+    }
   },
   async createSocket(ctx: StoreContext) {
     ctx.commit("CREATE_NEW_SOCKET");

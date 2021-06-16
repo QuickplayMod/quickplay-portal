@@ -54,6 +54,16 @@ Vue.component("FontAwesomeIcon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
+router.afterEach(to => {
+  Vue.nextTick(() => {
+    if (to.meta.title) {
+      document.title = "Quickplay - " + to.meta.title;
+    } else {
+      document.title = "Quickplay";
+    }
+  });
+});
+
 new Vue({
   router,
   store,

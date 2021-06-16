@@ -5,28 +5,28 @@
         {{ tab.name }}
       </VTab>
     </VTabs>
-    <VTabsItems v-model="tab" @change="updateRoute">
-      <VTabItem key="screens" value="/screens">
+    <VTabsItems v-model="tab">
+      <VTabItem key="screens" value="screens">
         <VCard flat>
           <ScreensTable :value="screenList" />
         </VCard>
       </VTabItem>
-      <VTabItem key="buttons" value="/buttons">
+      <VTabItem key="buttons" value="buttons">
         <VCard flat>
           <ButtonsTable :value="buttonList" />
         </VCard>
       </VTabItem>
-      <VTabItem key="aliased-actions" value="/aliased-actions">
+      <VTabItem key="aliased-actions" value="aliased-actions">
         <VCard flat>
           <AliasedActionsTable :value="aliasedActionList" />
         </VCard>
       </VTabItem>
-      <VTabItem key="translations" value="/translations">
+      <VTabItem key="translations" value="translations">
         <VCard flat>
           <TranslationsTable :value="translationList" />
         </VCard>
       </VTabItem>
-      <VTabItem key="regexes" value="/regexes">
+      <VTabItem key="regexes" value="regexes">
         <VCard flat>
           <RegexesTable :value="regexList" />
         </VCard>
@@ -135,38 +135,30 @@ export default {
         {
           key: "screens",
           name: "Screens",
-          route: "/screens"
+          route: "screens"
         },
         {
           key: "buttons",
           name: "Buttons",
-          route: "/buttons"
+          route: "buttons"
         },
         {
           key: "aliased-actions",
           name: "Aliased Actions",
-          route: "/aliased-actions"
+          route: "aliased-actions"
         },
         {
           key: "translations",
           name: "Translations",
-          route: "/translations"
+          route: "translations"
         },
         {
           key: "regexes",
           name: "Regular Expressions",
-          route: "/regexes"
+          route: "regexes"
         }
       ]
     };
-  },
-  methods: {
-    updateRoute(val) {
-      // Fix for swiping on touch screens not updating route
-      if (this.$route.path !== val) {
-        this.$router.push(val);
-      }
-    }
   }
 };
 </script>

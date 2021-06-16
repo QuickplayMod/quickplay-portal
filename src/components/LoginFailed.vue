@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <h1>Login failed!</h1>
     <h3>
       To log in, please try refreshing the page. You may need to enable pop-ups
@@ -15,4 +15,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.content {
+  text-align: center;
+  margin-top: 15vh;
+}
+</style>

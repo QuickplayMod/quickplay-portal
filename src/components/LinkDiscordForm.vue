@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <h1>Unknown Account</h1>
     <h3>
       We couldn't find a Quickplay account linked to your Discord account.
@@ -66,6 +66,10 @@ export default {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+.content {
+  text-align: center;
+  margin-top: 10vh;
 }
 </style>
 <style lang="scss">

@@ -15,9 +15,19 @@
       </div>
 
       <div class="nav-buttons">
-        <VBtn text>
-          Home
-        </VBtn>
+        <RouterLink to="/">
+          <VBtn text>
+            Home
+          </VBtn>
+        </RouterLink>
+        <RouterLink
+          to="/admin"
+          v-if="$store.state.isAdmin && $store.state.loggedIn"
+        >
+          <VBtn text>
+            Admin
+          </VBtn>
+        </RouterLink>
         <VBtn
           v-if="$store.state.isAdmin && $store.state.loggedIn"
           text
@@ -25,14 +35,16 @@
         >
           Edit Log
         </VBtn>
-        <VBtn
-          text
+        <RouterLink
+          to="/logout"
           v-if="$store.state.loggedIn"
-          @click="$store.dispatch('logout')"
+          class="login-button"
         >
-          Log out
-        </VBtn>
-        <VBtn text v-else-if="!$store.state.loggedOut" @click="init">
+          <VBtn text>
+            Log out
+          </VBtn>
+        </RouterLink>
+        <VBtn text v-else @click="login" class="login-button">
           Log in
         </VBtn>
         <VBtn text v-if="$store.state.loggedIn">
@@ -44,27 +56,16 @@
     <VMain class="main-body">
       <VContainer>
         <Loading class="loader" v-if="$store.state.loading" />
-        <LoggedOut
-          class="login-failed"
-          v-else-if="$store.state.loggedOut && !$store.state.loggedIn"
-        />
         <LinkDiscordForm
-          class="login-failed"
           v-else-if="!$store.state.loggedIn && $store.state.unlinkedDiscord"
         />
-        <LoginFailed
-          class="login-failed"
-          v-else-if="$store.state.loginFailed"
-        />
-        <NoPermission
-          class="login-failed"
-          v-else-if="!$store.state.loggedIn || !$store.state.isAdmin"
-        />
-        <LoggedInBody v-else />
+        <LoginFailed v-else-if="$store.state.loginFailed" />
+        <RouterView v-else />
         <EditLog
           v-model="showEditLog"
           :edit-log="$store.state.editHistory.events"
         />
+        <LoggedOutNotification />
       </VContainer>
     </VMain>
     <VSnackbar v-model="snackbar" bottom color="error">
@@ -76,13 +77,11 @@
 <script lang="ts">
 import Vue from "vue";
 import Loading from "@/components/Loading.vue";
-import LoggedInBody from "@/components/LoggedInBody.vue";
 import LoginFailed from "@/components/LoginFailed.vue";
-import NoPermission from "@/components/NoPermission.vue";
+import LinkDiscordForm from "@/components/LinkDiscordForm.vue";
 import { mapState } from "vuex";
 import EditLog from "@/components/EditLog.vue";
-import LoggedOut from "@/components/LoggedOut.vue";
-import LinkDiscordForm from "@/components/LinkDiscordForm.vue";
+import LoggedOutNotification from "@/components/LoggedOutNotification.vue";
 
 export default Vue.extend({
   name: "App",
@@ -94,13 +93,11 @@ export default Vue.extend({
     };
   },
   components: {
-    LinkDiscordForm,
-    LoggedOut,
+    LoggedOutNotification,
     EditLog,
-    NoPermission,
+    Loading,
     LoginFailed,
-    LoggedInBody,
-    Loading
+    LinkDiscordForm
   },
   async mounted() {
     // Initialize the application by connecting the socket.
@@ -126,9 +123,11 @@ export default Vue.extend({
     ...mapState(["errorMessages"])
   },
   methods: {
+    async login() {
+      await this.$store.dispatch("login");
+    },
     async init() {
       if (this.$route.query.code) {
-        console.log(this.$route.query.code);
         return;
       }
       await this.$store.dispatch("initialize");
@@ -151,10 +150,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 @import "~vuetify/src/styles/styles.sass";
-.login-failed {
-  text-align: center;
-  margin-top: 15vh;
-}
 .loader {
   margin-left: 50%;
   transform: translateX(-50%);
@@ -180,8 +175,9 @@ export default Vue.extend({
     display: none;
   }
 }
-.signin-button {
-  position: relative;
+.login-button {
+  position: absolute;
   right: 0;
+  height: 87%;
 }
 </style>
